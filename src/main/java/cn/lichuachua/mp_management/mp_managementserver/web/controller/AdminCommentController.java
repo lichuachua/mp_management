@@ -31,7 +31,7 @@ public class AdminCommentController extends BaseController<AdminInfoDTO> {
      * @param operationId
      * @return
      */
-    @ApiOperation("忽略文章举报")
+    @ApiOperation("忽略评论举报")
     @PutMapping("/ignore/{operationId}")
     public ResultWrapper ignore(
             @PathVariable(value = "operationId" ) String operationId ){
@@ -58,7 +58,7 @@ public class AdminCommentController extends BaseController<AdminInfoDTO> {
      * 显示处理过的文章举报
      * @return
      */
-    @ApiOperation("显示处理过的文章举报")
+    @ApiOperation("显示处理过的评论举报")
     @GetMapping("/queryList")
     public ResultWrapper<List<OperationCommentVO>> queryList(){
         List<OperationCommentVO> operationCommentVOList = adminCommentService.queryList();

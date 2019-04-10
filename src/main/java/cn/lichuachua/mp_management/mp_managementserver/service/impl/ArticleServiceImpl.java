@@ -108,7 +108,7 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, String> impleme
             /**
              * 文章属于正常状态并且等级为空
              */
-            if (article.getStatus().equals(ArticleStatusEnum.NORMAL.getStatus())&&article.getRank()==null){
+            if (article.getStatus().equals(ArticleStatusEnum.NORMAL.getStatus())){
                 articleListVO.setArticleId(article.getArticleId());
                 articleListVO.setPublisherAvatar(article.getPublisherAvatar());
                 articleListVO.setPublisherNick(article.getPublisherNick());
@@ -146,7 +146,7 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, String> impleme
             /**
              * 文章属于删除状态并且等级为空
              */
-            if (article.getStatus().equals(ArticleStatusEnum.DELETED.getStatus())&&article.getRank()==null){
+            if (article.getStatus().equals(ArticleStatusEnum.DELETED.getStatus())){
                 articleListVO.setArticleId(article.getArticleId());
                 articleListVO.setPublisherAvatar(article.getPublisherAvatar());
                 articleListVO.setPublisherNick(article.getPublisherNick());
@@ -184,7 +184,7 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, String> impleme
             /**
              * 文章属于禁用状态
              */
-            if (article.getStatus().equals(ArticleStatusEnum.DISABLED.getStatus())&&article.getRank()==null){
+            if (article.getStatus().equals(ArticleStatusEnum.DISABLED.getStatus())){
                 articleListVO.setArticleId(article.getArticleId());
                 articleListVO.setPublisherAvatar(article.getPublisherAvatar());
                 articleListVO.setPublisherNick(article.getPublisherNick());

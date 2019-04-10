@@ -4,18 +4,24 @@ import cn.lichuachua.mp_management.core.support.service.impl.BaseServiceImpl;
 import cn.lichuachua.mp_management.mp_managementserver.entity.AdminComment;
 import cn.lichuachua.mp_management.mp_managementserver.entity.Article;
 import cn.lichuachua.mp_management.mp_managementserver.entity.ArticleComment;
+import cn.lichuachua.mp_management.mp_managementserver.entity.User;
 import cn.lichuachua.mp_management.mp_managementserver.enums.CommentEnum;
 import cn.lichuachua.mp_management.mp_managementserver.enums.ErrorCodeEnum;
 import cn.lichuachua.mp_management.mp_managementserver.exception.ArticleCommentException;
 import cn.lichuachua.mp_management.mp_managementserver.exception.InformCommentException;
+import cn.lichuachua.mp_management.mp_managementserver.exception.UserException;
 import cn.lichuachua.mp_management.mp_managementserver.service.IAdminCommentService;
 import cn.lichuachua.mp_management.mp_managementserver.service.IArticleCommentService;
 
+import cn.lichuachua.mp_management.mp_managementserver.service.IUserService;
+import cn.lichuachua.mp_management.mp_managementserver.vo.ArticleCommentListVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,7 +29,15 @@ public class ArticleCommentServiceImpl extends BaseServiceImpl<ArticleComment, S
 
     @Autowired
     private IAdminCommentService adminCommentService;
+    @Autowired
+    private IUserService userService;
 
+    /**
+     * 管理评论举报
+     * @param operationId
+     * @param adminId
+     * @return
+     */
     @Override
     public Integer updatedStatus(String operationId, String adminId) {
         /**
@@ -72,10 +86,108 @@ public class ArticleCommentServiceImpl extends BaseServiceImpl<ArticleComment, S
             throw new ArticleCommentException(ErrorCodeEnum.COMMENT_NO);
         }
 
+    }
 
 
+    /**
+     * 正常评论列表
+     * @return
+     */
+    @Override
+    public List<ArticleCommentListVO> queryNormalList(){
+        List<ArticleComment> articleCommentList = selectAll();
+        List<ArticleCommentListVO> articleCommentListVOList = new ArrayList<>();
+        for (ArticleComment articleComment : articleCommentList ){
+            ArticleCommentListVO articleCommentListVO = new ArticleCommentListVO();
+            /**
+             * 评论属于正常状态
+             */
+            if (articleComment.getStatus().equals(CommentEnum.COMMENT_EXIT.getStatus())){
+                articleCommentListVO.setPublisherId(articleComment.getCommentUserId());
+                articleCommentListVO.setCommentId(articleComment.getCommentId());
+                articleCommentListVO.setContent(articleComment.getContent());
+                articleCommentListVO.setCreatedAt(articleComment.getCreatedAt());
+                /**
+                 * 根据publisherID求出publisherName
+                 */
+                Optional<User> userOptional = userService.selectByKey(articleComment.getCommentUserId());
+                if (!userOptional.isPresent()){
+                    throw new UserException(ErrorCodeEnum.ERROR_USER);
+                }
+                articleCommentListVO.setPublisherName(userOptional.get().getUserName());
+                articleCommentListVO.setPublisherAvatar(userOptional.get().getUserAvatar());
+                articleCommentListVOList.add(articleCommentListVO);
+            }
+        }
+        return articleCommentListVOList;
+    }
 
 
+    /**
+     * 删除评论列表
+     * @return
+     */
+    @Override
+    public List<ArticleCommentListVO> queryDeleteList(){
+        List<ArticleComment> articleCommentList = selectAll();
+        List<ArticleCommentListVO> articleCommentListVOList = new ArrayList<>();
+        for (ArticleComment articleComment : articleCommentList ){
+            ArticleCommentListVO articleCommentListVO = new ArticleCommentListVO();
+            /**
+             * 评论属于正常状态
+             */
+            if (articleComment.getStatus().equals(CommentEnum.COMMENT_NO_EXIT.getStatus())){
+                articleCommentListVO.setPublisherId(articleComment.getCommentUserId());
+                articleCommentListVO.setCommentId(articleComment.getCommentId());
+                articleCommentListVO.setContent(articleComment.getContent());
+                articleCommentListVO.setCreatedAt(articleComment.getCreatedAt());
+                /**
+                 * 根据publisherID求出publisherName
+                 */
+                Optional<User> userOptional = userService.selectByKey(articleComment.getCommentUserId());
+                if (!userOptional.isPresent()){
+                    throw new UserException(ErrorCodeEnum.ERROR_USER);
+                }
+                articleCommentListVO.setPublisherName(userOptional.get().getUserName());
+                articleCommentListVO.setPublisherAvatar(userOptional.get().getUserAvatar());
+                articleCommentListVOList.add(articleCommentListVO);
+            }
+        }
+        return articleCommentListVOList;
+    }
+
+
+    /**
+     * 禁用评论列表
+     * @return
+     */
+    @Override
+    public List<ArticleCommentListVO> queryDisabledList(){
+        List<ArticleComment> articleCommentList = selectAll();
+        List<ArticleCommentListVO> articleCommentListVOList = new ArrayList<>();
+        for (ArticleComment articleComment : articleCommentList ){
+            ArticleCommentListVO articleCommentListVO = new ArticleCommentListVO();
+            /**
+             * 评论属于正常状态
+             */
+            if (articleComment.getStatus().equals(CommentEnum.COMMENT_DISABLE.getStatus())){
+                articleCommentListVO.setPublisherId(articleComment.getCommentUserId());
+                articleCommentListVO.setCommentId(articleComment.getCommentId());
+                articleCommentListVO.setContent(articleComment.getContent());
+                articleCommentListVO.setCreatedAt(articleComment.getCreatedAt());
+                /**
+                 * 根据publisherID求出publisherName
+                 */
+                Optional<User> userOptional = userService.selectByKey(articleComment.getCommentUserId());
+                if (!userOptional.isPresent()){
+                    throw new UserException(ErrorCodeEnum.ERROR_USER);
+                }
+                articleCommentListVO.setPublisherName(userOptional.get().getUserName());
+                articleCommentListVO.setPublisherAvatar(userOptional.get().getUserAvatar());
+                articleCommentListVOList.add(articleCommentListVO);
+            }
+        }
+        return articleCommentListVOList;
     }
 
 

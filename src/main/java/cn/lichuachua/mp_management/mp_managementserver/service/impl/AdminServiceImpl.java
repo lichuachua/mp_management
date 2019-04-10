@@ -153,6 +153,13 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin,String> implements I
             admin = optionalUser.get();
         }
         /**
+         * 判断密码是否正确
+         */
+        if (!adminLoginForm.getPassword().equals(admin.getPassword())){
+            throw new AdminException(ErrorCodeEnum.PASSWORD_ERROR);
+        }
+
+        /**
          * 生成accessToken
          */
         String accessToken = TokenUtil.genToken();
