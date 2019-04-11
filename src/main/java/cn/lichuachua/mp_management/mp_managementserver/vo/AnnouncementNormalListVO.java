@@ -11,6 +11,7 @@ import java.util.List;
  */
 @Data
 public class AnnouncementNormalListVO {
+    private String announcementId;
 
     private String publisherNick;
 

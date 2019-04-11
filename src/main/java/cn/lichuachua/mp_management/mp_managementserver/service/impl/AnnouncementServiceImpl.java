@@ -118,6 +118,7 @@ public class AnnouncementServiceImpl extends BaseServiceImpl<Announcement, Strin
         for (Announcement announcement : announcementList){
             AnnouncementNormalListVO announcementNormalListVO = new AnnouncementNormalListVO();
             if (announcement.getStatus().equals(AnnouncementStatusEnum.NORMAL.getStatus())){
+                announcementNormalListVO.setAnnouncementId(announcement.getAnnouncementId());
                 announcementNormalListVO.setAccessory(announcement.getAccessory());
                 announcementNormalListVO.setArticleType(announcement.getAccessory());
                 announcementNormalListVO.setUpdatedAt(announcement.getUpdatedAt());
