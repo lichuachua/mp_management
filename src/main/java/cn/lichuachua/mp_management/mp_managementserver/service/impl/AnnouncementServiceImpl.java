@@ -67,6 +67,7 @@ public class AnnouncementServiceImpl extends BaseServiceImpl<Announcement, Strin
     }
 
 
+
     /**
      * 删除公告
      * @param announcementId
