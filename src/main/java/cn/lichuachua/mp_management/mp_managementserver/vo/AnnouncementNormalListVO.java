@@ -17,7 +17,7 @@ public class AnnouncementNormalListVO {
 
     private String publisherAvatar;
 
-    private String articleType;
+    private String content;
 
     private String title;
 
