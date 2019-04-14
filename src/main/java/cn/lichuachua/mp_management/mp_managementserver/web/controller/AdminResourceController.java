@@ -13,4 +13,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/admin/team/log")
 public class AdminResourceController extends BaseController<AdminInfoDTO> {
+
 }
