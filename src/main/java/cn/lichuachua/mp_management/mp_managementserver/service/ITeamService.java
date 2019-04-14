@@ -9,6 +9,15 @@ import cn.lichuachua.mp_management.mp_managementserver.entity.Team;
  */
 
 public interface ITeamService extends IBaseService<Team, String> {
+    /**
+     * 禁用队伍
+     * @param teamId
+     */
+    void forbidden(String teamId);
 
-
+    /**
+     * 解除禁用队伍
+     * @param teamId
+     */
+    void relieveForbidden(String teamId);
 }

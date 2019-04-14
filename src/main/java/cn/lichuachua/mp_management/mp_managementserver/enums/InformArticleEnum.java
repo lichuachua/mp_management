@@ -9,12 +9,12 @@ import lombok.Getter;
 public enum InformArticleEnum {
 
     /**
-     * 收藏
+     * 未处理
      */
     INFORM_ARTICLE_NO_MANAGE(0,"未处理"),
 
     /**
-     * 删除收藏
+     * 已处理
      */
     INFORM_ARTICLE_MANAGE(1,"已处理")
 

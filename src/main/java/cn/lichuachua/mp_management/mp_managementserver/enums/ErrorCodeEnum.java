@@ -52,7 +52,8 @@ public enum ErrorCodeEnum {
     INFORM_OPERATION(1212,"该举报已被处理"),
     FOLLOW_EXIT(12114,"收藏已存在"),
     FOLLOW_NO_EXIT(12113,"收藏不存在"),
-    ADMIN_EXIT(11101,"该用户已经是管理员"),
+    ADMIN_EXIT(11111,"该用户已经是管理员"),
+    ADMIN_NO_EXIT(11112,"管理员不存在"),
     RANL_ERROR(11102,"等级过高"),
     SCHOOL_EXIT(12122,"该学校已经存在"),
     SCHOOL_NO_EXIT(12122,"该学校不存在"),
@@ -61,6 +62,22 @@ public enum ErrorCodeEnum {
     ACADEMY_EXIT(12125,"该学院已经存在"),
     ACADEMY_NO_EXIT(12126,"该学院不存在"),
     ANNOUNCEMENT_NO_EXIT(12224,"公告不存在"),
+    /**
+     * 队伍不存在
+     */
+    TEAM_NO_EXIT(1333,"队伍不存在"),
+    TEAM_EXIT(1333,"队伍已经存在"),
+    NO_JURISDICTION(13331,"没有权限"),
+    /**
+     * 已在该队伍中
+     */
+    TEAMMEMBER_EXIT(12211,"已在该队伍中"),
+    TEAMMEMBER_NO_EXIT(12211,"您不在该队伍中"),
+    /**
+     * 队伍类型不存在
+     */
+    TEAM_TYPE_NO_EXIT(12111,"该队伍类型不存在"),
+    TEAM_RESOURCE_NO_EXIT(12111,"该资源不存在"),
     /**
      * 验证码错误
      * @param code
