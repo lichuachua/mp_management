@@ -50,7 +50,7 @@ public class ArticleCommentController extends BaseController<AdminInfoDTO> {
      * @return
      */
     @ApiOperation("正常评论列表")
-    @GetMapping("queryNormalList")
+    @GetMapping("/queryNormalList")
     public ResultWrapper<List<ArticleCommentListVO>> queryNormalList(){
         /**
          * 显示正常文章列表
@@ -64,7 +64,7 @@ public class ArticleCommentController extends BaseController<AdminInfoDTO> {
      * @return
      */
     @ApiOperation("删除评论列表")
-    @GetMapping("queryDeleteList")
+    @GetMapping("/queryDeleteList")
     public ResultWrapper<List<ArticleCommentListVO>> queryDeleteList(){
         /**
          * 显示正常文章列表
@@ -79,7 +79,7 @@ public class ArticleCommentController extends BaseController<AdminInfoDTO> {
      * @return
      */
     @ApiOperation("禁用评论列表")
-    @GetMapping("queryDisabledList")
+    @GetMapping("/queryDisabledList")
     public ResultWrapper<List<ArticleCommentListVO>> queryDisabledList(){
         /**
          * 显示正常文章列表

@@ -4,12 +4,17 @@ import cn.lichuachua.mp_management.core.support.service.impl.BaseServiceImpl;
 import cn.lichuachua.mp_management.mp_managementserver.entity.Team;
 import cn.lichuachua.mp_management.mp_managementserver.enums.ErrorCodeEnum;
 import cn.lichuachua.mp_management.mp_managementserver.enums.TeamStatusEnum;
+import cn.lichuachua.mp_management.mp_managementserver.enums.TeamVisualEnum;
 import cn.lichuachua.mp_management.mp_managementserver.exception.TeamException;
 import cn.lichuachua.mp_management.mp_managementserver.service.ITeamService;
+import cn.lichuachua.mp_management.mp_managementserver.vo.TeamListVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -91,5 +96,33 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, String> implements IT
         update(team);
     }
 
-
+    /**
+     * 显示队伍列表
+     * @return
+     */
+    @Override
+    public List<TeamListVO> queryList(Integer status) {
+        List<Team> teamList = selectAll();
+        List<TeamListVO> teamListVOList = new ArrayList<>();
+        for (Team team : teamList){
+            if (team.getStatus().equals(status)){
+                TeamListVO teamListVO = new TeamListVO();
+                if (team.getVisual().equals(TeamVisualEnum.VISUAL.getStatus())){
+                    teamListVO.setVisual(TeamVisualEnum.VISUAL.getDesc());
+                }else if (team.getVisual().equals(TeamVisualEnum.NO_VISUAL.getStatus())){
+                    teamListVO.setVisual(TeamVisualEnum.NO_VISUAL.getDesc());
+                }
+                teamListVO.setCreatedAt(team.getCreatedAt());
+                teamListVO.setDescription(team.getDescription());
+                teamListVO.setHeaderAvatar(team.getHeaderAvatar());
+                teamListVO.setHeaderNick(team.getHeaderNick());
+                teamListVO.setTeamId(team.getTeamId());
+                teamListVO.setTeamName(team.getTeamName());
+                teamListVO.setType(team.getType());
+                BeanUtils.copyProperties(team, teamListVO);
+                teamListVOList.add(teamListVO);
+            }
+        }
+        return teamListVOList;
+    }
 }
