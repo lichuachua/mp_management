@@ -6,9 +6,11 @@ import cn.lichuachua.mp_management.core.support.service.impl.BaseServiceImpl;
 import cn.lichuachua.mp_management.mp_managementserver.dto.TokenInfo;
 import cn.lichuachua.mp_management.mp_managementserver.dto.VerificationCodeInfo;
 import cn.lichuachua.mp_management.mp_managementserver.entity.Admin;
+import cn.lichuachua.mp_management.mp_managementserver.entity.School;
 import cn.lichuachua.mp_management.mp_managementserver.entity.User;
 import cn.lichuachua.mp_management.mp_managementserver.enums.ErrorCodeEnum;
 import cn.lichuachua.mp_management.mp_managementserver.enums.AdminStatusEnum;
+import cn.lichuachua.mp_management.mp_managementserver.enums.SchoolStatusEnum;
 import cn.lichuachua.mp_management.mp_managementserver.enums.UserStatusEnum;
 import cn.lichuachua.mp_management.mp_managementserver.exception.AdminException;
 import cn.lichuachua.mp_management.mp_managementserver.exception.UserException;
@@ -18,15 +20,20 @@ import cn.lichuachua.mp_management.mp_managementserver.form.SendCodeForm;
 import cn.lichuachua.mp_management.mp_managementserver.form.AdminLoginForm;
 import cn.lichuachua.mp_management.mp_managementserver.repository.redis.IRedisRepository;
 import cn.lichuachua.mp_management.mp_managementserver.service.IAdminService;
+import cn.lichuachua.mp_management.mp_managementserver.service.ISchoolService;
 import cn.lichuachua.mp_management.mp_managementserver.service.IUserService;
 import cn.lichuachua.mp_management.mp_managementserver.util.SendCodeUtil;
+import cn.lichuachua.mp_management.mp_managementserver.vo.AdminVO;
 import com.aliyuncs.exceptions.ClientException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -41,6 +48,9 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin,String> implements I
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private ISchoolService schoolService;
 
     /**
      * 给予管理员权限
@@ -277,6 +287,110 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin,String> implements I
         admin.setAcademyId(adminOptional.get().getAcademyId());
         admin.setMobile(adminOptional.get().getMobile());
         admin.setPassword(changePasswordForm.getPassword());
+        update(admin);
+    }
+
+    /**
+     * 根据状态查出管理员列表
+     * @param status
+     * @return
+     */
+    @Override
+    public List<AdminVO> queryList(Integer status){
+        List<Admin> adminList = selectAll();
+        List<AdminVO> adminVOList = new ArrayList<>();
+        for (Admin admin : adminList){
+            AdminVO adminVO = new AdminVO();
+            if (admin.getStatus().equals(status)){
+                adminVO.setAdminName(admin.getAdminName());
+                adminVO.setAdminEmail(admin.getAdminEmail());
+                adminVO.setAdminMobile(admin.getMobile());
+                adminVO.setCreatedAt(admin.getCreatedAt());
+                adminVO.setGiverMobile(admin.getGiverMobile());
+                adminVO.setGiverName(admin.getGiverName());
+                /**
+                 * 如果管理员的学校不为空
+                 * 根据schoolId查询出schoolName
+                 */
+                if (admin.getSchoolId()==null){
+                    adminVO.setSchoolName(null);
+                }else {
+                    School school = new School();
+                    school.setStatus(SchoolStatusEnum.NORMAL.getStatus());
+                    school.setSchoolId(admin.getSchoolId());
+                    Optional<School> schoolOptional = schoolService.selectOne(Example.of(school));
+                    /**
+                     * 学校存在--学校名
+                     * 学校不存在，显示null
+                     */
+                    if (schoolOptional.isPresent()){
+                        adminVO.setSchoolName(schoolOptional.get().getSchoolName());
+                    }else {
+                        adminVO.setSchoolName(null);
+                    }
+                }
+                BeanUtils.copyProperties(admin,adminVO);
+                adminVOList.add(adminVO);
+            }
+        }
+        return adminVOList;
+    }
+
+
+    /**
+     * 更新管理员状态
+     * @param adminId
+     * @param status
+     */
+    @Override
+    public void updatedStatus(String adminId1, String adminId, Integer status){
+        /**
+         * 查看管理员是否存在
+         */
+        Admin admin = new Admin();
+        admin.setAdminId(adminId);
+        admin.setStatus(status);
+        Optional<Admin> adminOptional = selectOne(Example.of(admin));
+        if (!adminOptional.isPresent()){
+            throw new AdminException(ErrorCodeEnum.ADMIN_NO_EXIT);
+        }
+        /**
+         * 查看当前登录的管理员的等级是否大于操作的管理员等级
+         */
+        /**
+         * 根据adminId1取出当前登录的管理员rank；
+         */
+        Optional<Admin> adminOptional1 = selectByKey(adminId1);
+        if (adminOptional1.get().getRank() >= adminOptional.get().getRank()){
+            throw new AdminException(ErrorCodeEnum.NO_JURISDICTION);
+        }
+        /**
+         * 当传进来的当前的admin状态是0--》》1
+         * 1--》》0
+         */
+        if (status.equals(AdminStatusEnum.NORMAL.getStatus())){
+            admin.setStatus(AdminStatusEnum.DELETED.getStatus());
+        }else if (status.equals(AdminStatusEnum.DELETED.getStatus())){
+            admin.setStatus(AdminStatusEnum.NORMAL.getStatus());
+        }
+        admin.setRank(adminOptional.get().getRank());
+        admin.setUpdatedAt(new Date());
+        admin.setCreatedAt(adminOptional.get().getCreatedAt());
+        /**
+         * 修改Giver信息
+         */
+        admin.setGiverName(adminOptional1.get().getGiverName());
+        admin.setGiverMobile(adminOptional1.get().getMobile());
+        admin.setGiverId(adminId);
+        admin.setAdminNumber(adminOptional.get().getAdminNumber());
+        admin.setAdminNick(adminOptional.get().getAdminNick());
+        admin.setAdminName(adminOptional.get().getAdminName());
+        admin.setAdminEmail(adminOptional.get().getAdminEmail());
+        admin.setAdminAvatar(adminOptional.get().getAdminAvatar());
+        admin.setSchoolId(adminOptional.get().getSchoolId());
+        admin.setAcademyId(adminOptional.get().getAcademyId());
+        admin.setMobile(adminOptional.get().getMobile());
+        admin.setPassword(adminOptional.get().getPassword());
         update(admin);
     }
 

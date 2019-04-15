@@ -7,11 +7,13 @@ import cn.lichuachua.mp_management.mp_managementserver.form.ChangePasswordForm;
 import cn.lichuachua.mp_management.mp_managementserver.form.SendCodeForm;
 import cn.lichuachua.mp_management.mp_managementserver.form.AdminLoginForm;
 import cn.lichuachua.mp_management.mp_managementserver.form.AdminRegisterForm;
+import cn.lichuachua.mp_management.mp_managementserver.vo.AdminVO;
 import com.aliyuncs.exceptions.ClientException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
+import java.util.List;
 
 /**
  * @author 李歘歘
@@ -59,4 +61,24 @@ public interface IAdminService extends IBaseService<Admin, String> {
      * @param adminId
      */
     void changePassword(@Valid ChangePasswordForm changePasswordForm, String adminId);
+
+    /**
+     * 根据状态查看管理员列表
+     * @param status
+     * @return
+     */
+    List<AdminVO> queryList(Integer status);
+
+    /**
+     * 更新管理员状态
+     * @param adminId
+     * @param status
+     * @return
+     */
+    void updatedStatus(String adminId1, String adminId, Integer status);
+
+
+
+
+
 }
