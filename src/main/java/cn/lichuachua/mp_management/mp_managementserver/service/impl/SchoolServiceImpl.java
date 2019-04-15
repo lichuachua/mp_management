@@ -1,14 +1,17 @@
 package cn.lichuachua.mp_management.mp_managementserver.service.impl;
 
 import cn.lichuachua.mp_management.core.support.service.impl.BaseServiceImpl;
+import cn.lichuachua.mp_management.mp_managementserver.entity.Admin;
 import cn.lichuachua.mp_management.mp_managementserver.entity.School;
 import cn.lichuachua.mp_management.mp_managementserver.enums.ErrorCodeEnum;
 import cn.lichuachua.mp_management.mp_managementserver.enums.SchoolStatusEnum;
 import cn.lichuachua.mp_management.mp_managementserver.exception.SchoolException;
+import cn.lichuachua.mp_management.mp_managementserver.service.IAdminService;
 import cn.lichuachua.mp_management.mp_managementserver.service.ISchoolService;
 
 import cn.lichuachua.mp_management.mp_managementserver.vo.SchoolVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,9 @@ import java.util.Optional;
 
 @Service
 public class SchoolServiceImpl extends BaseServiceImpl<School, Integer> implements ISchoolService {
+
+    @Autowired
+    private IAdminService adminService;
 
     /**
      * 添加学校
@@ -104,6 +110,41 @@ public class SchoolServiceImpl extends BaseServiceImpl<School, Integer> implemen
             }
         }
         return schoolVOList;
+    }
+
+    /**
+     * 根据schoolId查询schoolName
+     * @param adminId
+     * @param schoolId
+     * @return
+     */
+    @Override
+    public String querySchoolName(String adminId, Integer schoolId){
+        /**
+         * 如果用户的学校不为空
+         * 根据schoolId查询出schoolName
+         */
+        /**
+         * 查询用户的学校信息
+         */
+        Optional<Admin> adminOptional = adminService.selectByKey(adminId);
+        if (adminOptional.get().getSchoolId()==null) {
+            return null;
+        }else {
+            School school = new School();
+            school.setSchoolId(schoolId);
+            school.setStatus(SchoolStatusEnum.NORMAL.getStatus());
+            Optional<School> schoolOptional = selectOne(Example.of(school));
+            /**
+             * 学校存在--学校名
+             * 学校不存在，显示null
+             */
+            if (!schoolOptional.isPresent()){
+                return null;
+            }else {
+                return schoolOptional.get().getSchoolName();
+            }
+        }
     }
 
 

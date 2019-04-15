@@ -33,4 +33,11 @@ public interface ISchoolService extends IBaseService<School, Integer> {
      * @return
      */
     List<SchoolVO> queryDeleteList();
+
+    /**
+     * 根据schoolId查询schoolName
+     * @param schoolId
+     * @return
+     */
+    String querySchoolName(String adminId, Integer schoolId);
 }

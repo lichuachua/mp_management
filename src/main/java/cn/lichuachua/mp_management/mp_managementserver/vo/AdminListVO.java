@@ -8,9 +8,7 @@ import java.util.Date;
  * @author 李歘歘
  */
 @Data
-public class AdminVO {
-
-    private String adminNick;
+public class AdminListVO {
 
     private String adminName;
 
@@ -18,19 +16,14 @@ public class AdminVO {
 
     private String adminEmail;
 
+    private String schoolName;
+
     private String giverName;
 
     private String giverMobile;
 
-    private String schoolName;
-
-    private String academyName;
-
-    private String adminNumber;
-
-    private Integer rank;
-
     private Date createdAt;
+
 
 
 }

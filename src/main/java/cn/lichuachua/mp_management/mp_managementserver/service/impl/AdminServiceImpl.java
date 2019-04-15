@@ -19,10 +19,12 @@ import cn.lichuachua.mp_management.mp_managementserver.form.ChangePasswordForm;
 import cn.lichuachua.mp_management.mp_managementserver.form.SendCodeForm;
 import cn.lichuachua.mp_management.mp_managementserver.form.AdminLoginForm;
 import cn.lichuachua.mp_management.mp_managementserver.repository.redis.IRedisRepository;
+import cn.lichuachua.mp_management.mp_managementserver.service.IAcademyService;
 import cn.lichuachua.mp_management.mp_managementserver.service.IAdminService;
 import cn.lichuachua.mp_management.mp_managementserver.service.ISchoolService;
 import cn.lichuachua.mp_management.mp_managementserver.service.IUserService;
 import cn.lichuachua.mp_management.mp_managementserver.util.SendCodeUtil;
+import cn.lichuachua.mp_management.mp_managementserver.vo.AdminListVO;
 import cn.lichuachua.mp_management.mp_managementserver.vo.AdminVO;
 import com.aliyuncs.exceptions.ClientException;
 import org.springframework.beans.BeanUtils;
@@ -51,6 +53,9 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin,String> implements I
 
     @Autowired
     private ISchoolService schoolService;
+
+    @Autowired
+    private IAcademyService academyService;
 
     /**
      * 给予管理员权限
@@ -296,44 +301,27 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin,String> implements I
      * @return
      */
     @Override
-    public List<AdminVO> queryList(Integer status){
+    public List<AdminListVO> queryList(Integer status){
         List<Admin> adminList = selectAll();
-        List<AdminVO> adminVOList = new ArrayList<>();
+        List<AdminListVO> adminListVOList = new ArrayList<>();
         for (Admin admin : adminList){
-            AdminVO adminVO = new AdminVO();
+            AdminListVO adminListVO = new AdminListVO();
             if (admin.getStatus().equals(status)){
-                adminVO.setAdminName(admin.getAdminName());
-                adminVO.setAdminEmail(admin.getAdminEmail());
-                adminVO.setAdminMobile(admin.getMobile());
-                adminVO.setCreatedAt(admin.getCreatedAt());
-                adminVO.setGiverMobile(admin.getGiverMobile());
-                adminVO.setGiverName(admin.getGiverName());
+                adminListVO.setAdminName(admin.getAdminName());
+                adminListVO.setAdminEmail(admin.getAdminEmail());
+                adminListVO.setAdminMobile(admin.getMobile());
+                adminListVO.setCreatedAt(admin.getCreatedAt());
+                adminListVO.setGiverMobile(admin.getGiverMobile());
+                adminListVO.setGiverName(admin.getGiverName());
                 /**
-                 * 如果管理员的学校不为空
-                 * 根据schoolId查询出schoolName
+                 * 调用根据adminId和schoolId查询schoolName接口
                  */
-                if (admin.getSchoolId()==null){
-                    adminVO.setSchoolName(null);
-                }else {
-                    School school = new School();
-                    school.setStatus(SchoolStatusEnum.NORMAL.getStatus());
-                    school.setSchoolId(admin.getSchoolId());
-                    Optional<School> schoolOptional = schoolService.selectOne(Example.of(school));
-                    /**
-                     * 学校存在--学校名
-                     * 学校不存在，显示null
-                     */
-                    if (schoolOptional.isPresent()){
-                        adminVO.setSchoolName(schoolOptional.get().getSchoolName());
-                    }else {
-                        adminVO.setSchoolName(null);
-                    }
-                }
-                BeanUtils.copyProperties(admin,adminVO);
-                adminVOList.add(adminVO);
+                adminListVO.setSchoolName(schoolService.querySchoolName(admin.getAdminId(), admin.getSchoolId()));
+                BeanUtils.copyProperties(admin, adminListVO);
+                adminListVOList.add(adminListVO);
             }
         }
-        return adminVOList;
+        return adminListVOList;
     }
 
 
@@ -392,6 +380,36 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin,String> implements I
         admin.setMobile(adminOptional.get().getMobile());
         admin.setPassword(adminOptional.get().getPassword());
         update(admin);
+    }
+
+
+    /**
+     * 查看自己的信息
+     * @param adminId
+     * @return
+     */
+    @Override
+    public AdminVO queryMyInformation(String adminId){
+        Admin admin = new Admin();
+        admin.setAdminId(adminId);
+        admin.setStatus(AdminStatusEnum.NORMAL.getStatus());
+        Optional<Admin> adminOptional = selectOne(Example.of(admin));
+        if (!adminOptional.isPresent()){
+            throw new AdminException(ErrorCodeEnum.ADMIN_NO_EXIT);
+        }
+        AdminVO adminVO = new AdminVO();
+        adminVO.setAdminNick(adminOptional.get().getAdminNick());
+        adminVO.setAdminName(adminOptional.get().getAdminName());
+        adminVO.setAdminMobile(adminOptional.get().getMobile());
+        adminVO.setAdminEmail(adminOptional.get().getAdminEmail());
+        adminVO.setAdminNumber(adminOptional.get().getAdminNumber());
+        adminVO.setGiverName(adminOptional.get().getGiverName());
+        adminVO.setGiverMobile(adminOptional.get().getGiverMobile());
+        adminVO.setCreatedAt(adminOptional.get().getCreatedAt());
+        adminVO.setSchoolName(schoolService.querySchoolName(adminId, adminOptional.get().getSchoolId()));
+        adminVO.setAcademyName(academyService.queryAcademyName(adminId,adminOptional.get().getAcademyId()));
+        adminVO.setRank(adminOptional.get().getRank());
+        return adminVO;
     }
 
 }

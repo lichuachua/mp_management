@@ -7,6 +7,7 @@ import cn.lichuachua.mp_management.mp_managementserver.form.ChangePasswordForm;
 import cn.lichuachua.mp_management.mp_managementserver.form.SendCodeForm;
 import cn.lichuachua.mp_management.mp_managementserver.form.AdminLoginForm;
 import cn.lichuachua.mp_management.mp_managementserver.form.AdminRegisterForm;
+import cn.lichuachua.mp_management.mp_managementserver.vo.AdminListVO;
 import cn.lichuachua.mp_management.mp_managementserver.vo.AdminVO;
 import com.aliyuncs.exceptions.ClientException;
 
@@ -67,7 +68,7 @@ public interface IAdminService extends IBaseService<Admin, String> {
      * @param status
      * @return
      */
-    List<AdminVO> queryList(Integer status);
+    List<AdminListVO> queryList(Integer status);
 
     /**
      * 更新管理员状态
@@ -78,7 +79,6 @@ public interface IAdminService extends IBaseService<Admin, String> {
     void updatedStatus(String adminId1, String adminId, Integer status);
 
 
-
-
+    AdminVO queryMyInformation(String adminId);
 
 }

@@ -3,14 +3,13 @@ package cn.lichuachua.mp_management.mp_managementserver.web.controller;
 import cn.lichuachua.mp_management.core.support.web.controller.BaseController;
 import cn.lichuachua.mp_management.mp_managementserver.dto.TokenInfo;
 import cn.lichuachua.mp_management.mp_managementserver.dto.AdminInfoDTO;
-import cn.lichuachua.mp_management.mp_managementserver.entity.Admin;
 import cn.lichuachua.mp_management.mp_managementserver.enums.AdminStatusEnum;
 import cn.lichuachua.mp_management.mp_managementserver.form.ChangePasswordForm;
 import cn.lichuachua.mp_management.mp_managementserver.form.SendCodeForm;
 import cn.lichuachua.mp_management.mp_managementserver.form.AdminLoginForm;
 import cn.lichuachua.mp_management.mp_managementserver.form.AdminRegisterForm;
 import cn.lichuachua.mp_management.mp_managementserver.service.IAdminService;
-import cn.lichuachua.mp_management.mp_managementserver.service.IAdminUserService;
+import cn.lichuachua.mp_management.mp_managementserver.vo.AdminListVO;
 import cn.lichuachua.mp_management.mp_managementserver.vo.AdminVO;
 import cn.lichuachua.mp_management.mp_managementserver.wrapper.ResultWrapper;
 import com.aliyuncs.exceptions.ClientException;
@@ -166,9 +165,9 @@ public class AdminController extends BaseController<AdminInfoDTO> {
      */
     @ApiOperation("查看正常管理员列表")
     @GetMapping("/queryNormalList")
-    public ResultWrapper<List<AdminVO>> queryNormalList(){
-        List<AdminVO> adminVOList = adminService.queryList(AdminStatusEnum.NORMAL.getStatus());
-        return ResultWrapper.successWithData(adminVOList);
+    public ResultWrapper<List<AdminListVO>> queryNormalList(){
+        List<AdminListVO> adminListVOList = adminService.queryList(AdminStatusEnum.NORMAL.getStatus());
+        return ResultWrapper.successWithData(adminListVOList);
     }
 
     /**
@@ -177,17 +176,19 @@ public class AdminController extends BaseController<AdminInfoDTO> {
      */
     @ApiOperation("查看删除管理员列表")
     @GetMapping("/queryDeletedList")
-    public ResultWrapper<List<AdminVO>> queryDeletedList(){
-        List<AdminVO> adminVOList = adminService.queryList(AdminStatusEnum.DELETED.getStatus());
-        return ResultWrapper.successWithData(adminVOList);
+    public ResultWrapper<List<AdminListVO>> queryDeletedList(){
+        List<AdminListVO> adminListVOList = adminService.queryList(AdminStatusEnum.DELETED.getStatus());
+        return ResultWrapper.successWithData(adminListVOList);
     }
+
+
     /**
      * 解除管理员
      * @return
      */
     @ApiOperation("解除管理员")
     @GetMapping("/deleted/{adminId}")
-    public ResultWrapper<List<AdminVO>> deleted(
+    public ResultWrapper deleted(
             @PathVariable(value = "adminId") String adminId){
         /**
          * 获取当前登录的用户Id
@@ -200,13 +201,14 @@ public class AdminController extends BaseController<AdminInfoDTO> {
         return ResultWrapper.success();
     }
 
+
     /**
      * 恢复管理员
      * @return
      */
     @ApiOperation("恢复管理员")
     @GetMapping("/relieve/{adminId}")
-    public ResultWrapper<List<AdminVO>> relieve(
+    public ResultWrapper relieve(
             @PathVariable(value = "adminId") String adminId){
         /**
          * 获取当前登录的用户Id
@@ -220,4 +222,14 @@ public class AdminController extends BaseController<AdminInfoDTO> {
     }
 
 
+    @ApiOperation("显示当前登录的管理员信息")
+    @GetMapping("/queryMyInformation")
+    public ResultWrapper<AdminVO> queryMyInformation(){
+        /**
+         * 获取当前登录用户Id
+         */
+        String adminId = getCurrentUserInfo().getUserId();
+        AdminVO adminVO = adminService.queryMyInformation(adminId);
+        return ResultWrapper.successWithData(adminVO);
+    }
 }

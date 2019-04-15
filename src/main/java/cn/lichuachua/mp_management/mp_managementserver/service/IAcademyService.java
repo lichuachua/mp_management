@@ -30,4 +30,12 @@ public interface IAcademyService extends IBaseService<Academy, Integer> {
      * @return
      */
     List<AcademyVO> queryDeleteList();
+
+    /**
+     * academyId根据查询academyName
+     * @param academyId
+     * @return
+     */
+    String queryAcademyName(String adminId, Integer academyId);
+
 }
