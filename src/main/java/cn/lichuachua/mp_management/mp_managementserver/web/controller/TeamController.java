@@ -6,6 +6,7 @@ import cn.lichuachua.mp_management.mp_managementserver.dto.AdminInfoDTO;
 import cn.lichuachua.mp_management.mp_managementserver.enums.TeamStatusEnum;
 import cn.lichuachua.mp_management.mp_managementserver.service.ITeamService;
 import cn.lichuachua.mp_management.mp_managementserver.vo.TeamListVO;
+import cn.lichuachua.mp_management.mp_managementserver.vo.TeamVO;
 import cn.lichuachua.mp_management.mp_managementserver.wrapper.ResultWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -60,5 +61,21 @@ public class TeamController extends BaseController<AdminInfoDTO> {
         List<TeamListVO> teamListVOList = teamService.queryList(TeamStatusEnum.DISABLED.getStatus());
         return ResultWrapper.successWithData(teamListVOList);
     }
+
+
+    /**
+     * 显示队伍详情
+     * @param teamId
+     * @return
+     */
+    @ApiOperation("显示队伍详情")
+    @GetMapping("/query/{teamId}")
+    public ResultWrapper<TeamVO> query(
+            @PathVariable(value = "teamId") String teamId) {
+        TeamVO teamVO= teamService.query(teamId);
+        return ResultWrapper.successWithData(teamVO);
+    }
+
+
 
 }

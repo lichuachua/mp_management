@@ -4,6 +4,7 @@ package cn.lichuachua.mp_management.mp_managementserver.service;
 import cn.lichuachua.mp_management.core.support.service.IBaseService;
 import cn.lichuachua.mp_management.mp_managementserver.entity.Team;
 import cn.lichuachua.mp_management.mp_managementserver.vo.TeamListVO;
+import cn.lichuachua.mp_management.mp_managementserver.vo.TeamVO;
 
 import java.util.List;
 
@@ -25,4 +26,6 @@ public interface ITeamService extends IBaseService<Team, String> {
     void relieveForbidden(String teamId);
 
     List<TeamListVO> queryList(Integer status);
+
+    TeamVO query(String teamId);
 }

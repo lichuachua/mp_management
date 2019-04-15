@@ -6,9 +6,12 @@ import cn.lichuachua.mp_management.mp_managementserver.enums.ErrorCodeEnum;
 import cn.lichuachua.mp_management.mp_managementserver.enums.TeamStatusEnum;
 import cn.lichuachua.mp_management.mp_managementserver.enums.TeamVisualEnum;
 import cn.lichuachua.mp_management.mp_managementserver.exception.TeamException;
+import cn.lichuachua.mp_management.mp_managementserver.service.ITeamMemberService;
 import cn.lichuachua.mp_management.mp_managementserver.service.ITeamService;
 import cn.lichuachua.mp_management.mp_managementserver.vo.TeamListVO;
+import cn.lichuachua.mp_management.mp_managementserver.vo.TeamVO;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,9 @@ import java.util.Optional;
 @Service
 public class TeamServiceImpl extends BaseServiceImpl<Team, String> implements ITeamService {
 
+
+    @Autowired
+    private ITeamMemberService teamMemberService;
 
     /**
      * 禁用队伍
@@ -125,4 +131,31 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, String> implements IT
         }
         return teamListVOList;
     }
+
+    @Override
+    public TeamVO query(String teamId){
+        /**
+         * 查看队伍是否存在
+         */
+        Team team = new Team();
+        team.setTeamId(teamId);
+        team.setStatus(TeamStatusEnum.NORMAL.getStatus());
+        Optional<Team> teamOptional = selectOne(Example.of(team));
+        if (!teamOptional.isPresent()){
+            throw new TeamException(ErrorCodeEnum.TEAM_NO_EXIT);
+        }
+
+        TeamVO teamVO = new TeamVO();
+        teamVO.setTeamName(teamOptional.get().getTeamName());
+        teamVO.setDescription(teamOptional.get().getDescription());
+        teamVO.setHeaderId(teamOptional.get().getHeaderId());
+        teamVO.setHeaderAvatar(teamOptional.get().getHeaderAvatar());
+        teamVO.setHeaderNick(teamOptional.get().getHeaderNick());
+        teamVO.setType(team.getType());
+        teamVO.setCreatedAt(teamOptional.get().getCreatedAt());
+        teamVO.setTeamMemberVOList(teamMemberService.queryList(teamId));
+        return teamVO;
+    }
+
+
 }
