@@ -25,7 +25,17 @@ public interface ITeamService extends IBaseService<Team, String> {
      */
     void relieveForbidden(String teamId);
 
+    /**
+     * 根据状态取出队伍列表
+     * @param status
+     * @return
+     */
     List<TeamListVO> queryList(Integer status);
 
+    /**
+     * 显示队伍详情
+     * @param teamId
+     * @return
+     */
     TeamVO query(String teamId);
 }

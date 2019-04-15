@@ -132,6 +132,11 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, String> implements IT
         return teamListVOList;
     }
 
+    /**
+     * 显示队伍详情
+     * @param teamId
+     * @return
+     */
     @Override
     public TeamVO query(String teamId){
         /**
@@ -139,12 +144,10 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, String> implements IT
          */
         Team team = new Team();
         team.setTeamId(teamId);
-        team.setStatus(TeamStatusEnum.NORMAL.getStatus());
         Optional<Team> teamOptional = selectOne(Example.of(team));
         if (!teamOptional.isPresent()){
             throw new TeamException(ErrorCodeEnum.TEAM_NO_EXIT);
         }
-
         TeamVO teamVO = new TeamVO();
         teamVO.setTeamName(teamOptional.get().getTeamName());
         teamVO.setDescription(teamOptional.get().getDescription());
