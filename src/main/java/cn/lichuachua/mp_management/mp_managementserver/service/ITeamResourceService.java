@@ -28,4 +28,10 @@ public interface ITeamResourceService extends IBaseService<TeamResource, String>
      * @return
      */
     TeamResourceVO query(String resourceId);
+
+
+    void forbidden(String resourceId);
+
+    void relieveForbidden(String resourceId);
+
 }

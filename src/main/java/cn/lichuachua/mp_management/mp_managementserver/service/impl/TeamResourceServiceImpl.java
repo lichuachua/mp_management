@@ -2,7 +2,6 @@ package cn.lichuachua.mp_management.mp_managementserver.service.impl;
 
 import cn.lichuachua.mp_management.core.support.service.impl.BaseServiceImpl;
 import cn.lichuachua.mp_management.mp_managementserver.entity.Team;
-import cn.lichuachua.mp_management.mp_managementserver.entity.TeamMember;
 import cn.lichuachua.mp_management.mp_managementserver.entity.TeamResource;
 import cn.lichuachua.mp_management.mp_managementserver.enums.ErrorCodeEnum;
 import cn.lichuachua.mp_management.mp_managementserver.enums.TeamResourceStatusEnum;
@@ -21,6 +20,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +39,6 @@ public class TeamResourceServiceImpl extends BaseServiceImpl<TeamResource, Strin
 
     @Autowired
     private ITeamMemberService teamMemberService;
-
 
 
     /**
@@ -79,10 +78,15 @@ public class TeamResourceServiceImpl extends BaseServiceImpl<TeamResource, Strin
     }
 
 
+    /**
+     * 查看资源详情
+     * @param resourceId
+     * @return
+     */
     @Override
     public TeamResourceVO query(String resourceId){
         /**
-         * 根据资源状态查找
+         * 根据资源Id查找
          */
         TeamResource teamResource = new TeamResource();
         teamResource.setResourceId(resourceId);
@@ -97,6 +101,69 @@ public class TeamResourceServiceImpl extends BaseServiceImpl<TeamResource, Strin
         teamResourceVO.setCreatedAt(teamResourceOptional.get().getCreatedAt());
         teamResourceVO.setResourceName(teamResourceOptional.get().getResourceName());
         return teamResourceVO;
+    }
+
+
+    /**
+     * 禁用资源
+     * @param resourceId
+     */
+    @Override
+    public void forbidden(String resourceId){
+        /**
+         * 查看当前的资源是否存在
+         */
+        TeamResource teamResource = new TeamResource();
+        teamResource.setResourceId(resourceId);
+        teamResource.setStatus(TeamResourceStatusEnum.NORMAL.getStatus());
+        Optional<TeamResource> teamResourceOptional = selectOne(Example.of(teamResource));
+        if (!teamResourceOptional.isPresent()){
+            throw new TeamResourceException(ErrorCodeEnum.TEAM_RESOURCE_NO_EXIT);
+        }
+        /**
+         * 禁用资源
+         */
+        teamResource.setStatus(TeamResourceStatusEnum.DISABLED.getStatus());
+        teamResource.setPublisherId(teamResourceOptional.get().getPublisherId());
+        teamResource.setResource(teamResourceOptional.get().getResource());
+        teamResource.setPublisherNick(teamResourceOptional.get().getPublisherNick());
+        teamResource.setUpdatedAt(new Date());
+        teamResource.setCreatedAt(teamResourceOptional.get().getCreatedAt());
+        teamResource.setResourceName(teamResourceOptional.get().getResourceName());
+        teamResource.setTeamId(teamResourceOptional.get().getTeamId());
+        update(teamResource);
+    }
+
+
+    /**
+     * 解除禁用资源
+     * @param resourceId
+     */
+    @Override
+    public void relieveForbidden(String resourceId){
+        /**
+         * 查看当前的资源是否被禁用
+         */
+        TeamResource teamResource = new TeamResource();
+        teamResource.setResourceId(resourceId);
+        teamResource.setStatus(TeamResourceStatusEnum.DISABLED.getStatus());
+        Optional<TeamResource> teamResourceOptional = selectOne(Example.of(teamResource));
+        if (!teamResourceOptional.isPresent()){
+            throw new TeamResourceException(ErrorCodeEnum.TEAM_RESOURCE_NO_EXIT);
+        }
+        /**
+         * 解除禁用资源
+         */
+        teamResource.setStatus(TeamResourceStatusEnum.NORMAL.getStatus());
+        teamResource.setPublisherId(teamResourceOptional.get().getPublisherId());
+        teamResource.setResource(teamResourceOptional.get().getResource());
+        teamResource.setPublisherNick(teamResourceOptional.get().getPublisherNick());
+        teamResource.setUpdatedAt(new Date());
+        teamResource.setCreatedAt(teamResourceOptional.get().getCreatedAt());
+        teamResource.setResourceName(teamResourceOptional.get().getResourceName());
+        teamResource.setTeamId(teamResourceOptional.get().getTeamId());
+        update(teamResource);
+
     }
 
 

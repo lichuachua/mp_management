@@ -14,7 +14,7 @@ import java.util.Date;
  */
 @Data
 @Entity(name = "mp_admin_resource")
-public class AdminResource {
+public class AdminTeamResource {
 
     @Id
     @GeneratedValue(generator = "uuid")
