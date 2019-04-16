@@ -32,5 +32,6 @@ public class AnnouncementPublishForm {
     /**
      * 公告类型
      */
+    @NotNull(message = "公告类型不能为空")
     private Integer type;
 }
