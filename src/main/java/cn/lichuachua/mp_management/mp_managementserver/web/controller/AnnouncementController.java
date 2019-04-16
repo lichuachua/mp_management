@@ -49,23 +49,31 @@ public class AnnouncementController extends BaseController<AdminInfoDTO> {
          * 参数检验
          */
         validateParams(bindingResult);
-        //文件路径
-        String filePath = "C:/Users/Administrator/Desktop/Mp/mp_management/src/main/resources/static/announcement/";
-        //文件名字
-        String fileName = file.getOriginalFilename();
-        /**
-         * 调用文件上传方法，将文件上传
-         */
-        try {
-            FileUtil.uploadFile(file.getBytes(), filePath, fileName);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+
         /**
          * 获取当前登录的sdminId
          */
         String adminId = getCurrentUserInfo().getUserId();
-        announcementService.publish(announcementPublishForm, adminId, fileName);
+        /**
+         * 上传文件
+         */
+        if (file!=(null)) {
+            //文件路径
+            String filePath = "C:/Users/Administrator/Desktop/Mp/mp_management/src/main/resources/static/announcement/";
+            //文件名
+            String fileName = file.getOriginalFilename();
+            /**
+             * 调用上传文件方法
+             */
+            try {
+                FileUtil.uploadFile(file.getBytes(), filePath, fileName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            announcementService.publish(announcementPublishForm, adminId, fileName);
+        }else {
+            announcementService.publish(announcementPublishForm, adminId, null);
+        }
         return ResultWrapper.success();
     }
 
