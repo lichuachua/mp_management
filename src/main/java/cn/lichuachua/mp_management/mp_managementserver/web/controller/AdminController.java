@@ -4,10 +4,7 @@ import cn.lichuachua.mp_management.core.support.web.controller.BaseController;
 import cn.lichuachua.mp_management.mp_managementserver.dto.TokenInfo;
 import cn.lichuachua.mp_management.mp_managementserver.dto.AdminInfoDTO;
 import cn.lichuachua.mp_management.mp_managementserver.enums.AdminStatusEnum;
-import cn.lichuachua.mp_management.mp_managementserver.form.ChangePasswordForm;
-import cn.lichuachua.mp_management.mp_managementserver.form.SendCodeForm;
-import cn.lichuachua.mp_management.mp_managementserver.form.AdminLoginForm;
-import cn.lichuachua.mp_management.mp_managementserver.form.AdminRegisterForm;
+import cn.lichuachua.mp_management.mp_managementserver.form.*;
 import cn.lichuachua.mp_management.mp_managementserver.service.IAdminService;
 import cn.lichuachua.mp_management.mp_managementserver.util.FileUtil;
 import cn.lichuachua.mp_management.mp_managementserver.vo.AdminListVO;
@@ -261,6 +258,36 @@ public class AdminController extends BaseController<AdminInfoDTO> {
          */
         String adminId= getCurrentUserInfo().getUserId();
         adminService.updateAvatar(fileName, adminId);
+        return ResultWrapper.success();
+    }
+
+
+
+    /**
+     * 修改个人信息
+     * @param adminInforForm
+     * @param bindingResult
+     * @return
+     */
+    @ApiOperation("/修改个人信息")
+    @PutMapping("/infor")
+    public ResultWrapper infor(
+            @Valid AdminInforForm adminInforForm,
+            BindingResult bindingResult) {
+        /**
+         * 验证参数
+         */
+        validateParams(bindingResult);
+
+        /**
+         * 获取当前登录的用户
+         */
+        String adminId = getCurrentUserInfo().getUserId();
+
+        /**
+         * 修改个人信息
+         */
+        adminService.infor(adminInforForm, adminId);
         return ResultWrapper.success();
     }
 }

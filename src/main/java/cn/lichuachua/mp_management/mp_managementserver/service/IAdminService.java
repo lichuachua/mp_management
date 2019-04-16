@@ -3,10 +3,7 @@ package cn.lichuachua.mp_management.mp_managementserver.service;
 import cn.lichuachua.mp_management.core.support.service.IBaseService;
 import cn.lichuachua.mp_management.mp_managementserver.dto.TokenInfo;
 import cn.lichuachua.mp_management.mp_managementserver.entity.Admin;
-import cn.lichuachua.mp_management.mp_managementserver.form.ChangePasswordForm;
-import cn.lichuachua.mp_management.mp_managementserver.form.SendCodeForm;
-import cn.lichuachua.mp_management.mp_managementserver.form.AdminLoginForm;
-import cn.lichuachua.mp_management.mp_managementserver.form.AdminRegisterForm;
+import cn.lichuachua.mp_management.mp_managementserver.form.*;
 import cn.lichuachua.mp_management.mp_managementserver.vo.AdminListVO;
 import cn.lichuachua.mp_management.mp_managementserver.vo.AdminVO;
 import com.aliyuncs.exceptions.ClientException;
@@ -92,4 +89,12 @@ public interface IAdminService extends IBaseService<Admin, String> {
      * @param adminId
      */
     void updateAvatar(String fileName, String adminId);
+
+    /**
+     * 修改个人信息
+     * @param adminInforForm
+     * @param adminId
+     */
+    void infor(@Valid AdminInforForm adminInforForm, String adminId);
+
 }

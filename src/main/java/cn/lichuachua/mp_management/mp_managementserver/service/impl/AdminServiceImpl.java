@@ -14,10 +14,7 @@ import cn.lichuachua.mp_management.mp_managementserver.enums.SchoolStatusEnum;
 import cn.lichuachua.mp_management.mp_managementserver.enums.UserStatusEnum;
 import cn.lichuachua.mp_management.mp_managementserver.exception.AdminException;
 import cn.lichuachua.mp_management.mp_managementserver.exception.UserException;
-import cn.lichuachua.mp_management.mp_managementserver.form.AdminRegisterForm;
-import cn.lichuachua.mp_management.mp_managementserver.form.ChangePasswordForm;
-import cn.lichuachua.mp_management.mp_managementserver.form.SendCodeForm;
-import cn.lichuachua.mp_management.mp_managementserver.form.AdminLoginForm;
+import cn.lichuachua.mp_management.mp_managementserver.form.*;
 import cn.lichuachua.mp_management.mp_managementserver.repository.redis.IRedisRepository;
 import cn.lichuachua.mp_management.mp_managementserver.service.IAcademyService;
 import cn.lichuachua.mp_management.mp_managementserver.service.IAdminService;
@@ -443,6 +440,37 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin,String> implements I
         admin.setAdminAvatar(fileName);
         admin.setSchoolId(adminOptional.get().getSchoolId());
         admin.setAcademyId(adminOptional.get().getAcademyId());
+        admin.setMobile(adminOptional.get().getMobile());
+        admin.setPassword(adminOptional.get().getPassword());
+        update(admin);
+    }
+
+
+    @Override
+    public void infor(AdminInforForm adminInforForm, String adminId){
+        /**
+         * 查看用户是否存在
+         */
+        Admin admin = new Admin();
+        admin.setAdminId(adminId);
+        admin.setStatus(AdminStatusEnum.NORMAL.getStatus());
+        Optional<Admin> adminOptional = selectOne(Example.of(admin));
+        if (!adminOptional.isPresent()){
+            throw new AdminException(ErrorCodeEnum.ADMIN_NO_EXIT);
+        }
+        admin.setRank(adminOptional.get().getRank());
+        admin.setUpdatedAt(new Date());
+        admin.setCreatedAt(adminOptional.get().getCreatedAt());
+        admin.setGiverName(adminOptional.get().getGiverName());
+        admin.setGiverMobile(adminOptional.get().getMobile());
+        admin.setGiverId(adminOptional.get().getGiverId());
+        admin.setAdminNumber(adminInforForm.getAdminNumber());
+        admin.setAdminNick(adminInforForm.getAdminNick());
+        admin.setAdminName(adminInforForm.getAdminName());
+        admin.setAdminEmail(adminInforForm.getAdminEmail());
+        admin.setAdminAvatar(adminOptional.get().getAdminAvatar());
+        admin.setSchoolId(adminInforForm.getSchoolId());
+        admin.setAcademyId(adminInforForm.getAcademyId());
         admin.setMobile(adminOptional.get().getMobile());
         admin.setPassword(adminOptional.get().getPassword());
         update(admin);
