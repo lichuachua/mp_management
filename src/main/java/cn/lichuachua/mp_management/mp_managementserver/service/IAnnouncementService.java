@@ -17,7 +17,7 @@ public interface IAnnouncementService extends IBaseService<Announcement, String>
      * @param announcementPublishForm
      * @param adminId
      */
-    void publish(@Valid AnnouncementPublishForm announcementPublishForm, String adminId);
+    void publish(@Valid AnnouncementPublishForm announcementPublishForm, String adminId, String fileName);
 
     /**
      * 删除公告
@@ -51,4 +51,5 @@ public interface IAnnouncementService extends IBaseService<Announcement, String>
      * @return
      */
     AnnouncementDeleteVO queryDelete(String announcementId);
+
 }

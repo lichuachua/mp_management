@@ -4,6 +4,7 @@ import cn.lichuachua.mp_management.core.support.web.controller.BaseController;
 import cn.lichuachua.mp_management.mp_managementserver.dto.AdminInfoDTO;
 import cn.lichuachua.mp_management.mp_managementserver.form.AnnouncementPublishForm;
 import cn.lichuachua.mp_management.mp_managementserver.service.IAnnouncementService;
+import cn.lichuachua.mp_management.mp_managementserver.util.FileUtil;
 import cn.lichuachua.mp_management.mp_managementserver.vo.AnnouncementDeleteListVO;
 import cn.lichuachua.mp_management.mp_managementserver.vo.AnnouncementDeleteVO;
 import cn.lichuachua.mp_management.mp_managementserver.vo.AnnouncementNormalListVO;
@@ -14,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -41,16 +43,29 @@ public class AnnouncementController extends BaseController<AdminInfoDTO> {
     @PostMapping("/publish")
     public ResultWrapper publish(
             @Valid AnnouncementPublishForm announcementPublishForm,
+            MultipartFile file,
             BindingResult bindingResult){
         /**
          * 参数检验
          */
         validateParams(bindingResult);
+        //文件路径
+        String filePath = "C:/Users/Administrator/Desktop/Mp/mp_management/src/main/resources/static/announcement/";
+        //文件名字
+        String fileName = file.getOriginalFilename();
+        /**
+         * 调用文件上传方法，将文件上传
+         */
+        try {
+            FileUtil.uploadFile(file.getBytes(), filePath, fileName);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         /**
          * 获取当前登录的sdminId
          */
         String adminId = getCurrentUserInfo().getUserId();
-        announcementService.publish(announcementPublishForm, adminId);
+        announcementService.publish(announcementPublishForm, adminId, fileName);
         return ResultWrapper.success();
     }
 

@@ -3,17 +3,14 @@ package cn.lichuachua.mp_management.mp_managementserver.web.controller;
 
 import cn.lichuachua.mp_management.core.support.web.controller.BaseController;
 import cn.lichuachua.mp_management.mp_managementserver.dto.AdminInfoDTO;
-import cn.lichuachua.mp_management.mp_managementserver.form.AnnouncementPublishForm;
 import cn.lichuachua.mp_management.mp_managementserver.service.IArticleService;
 import cn.lichuachua.mp_management.mp_managementserver.vo.ArticleListVO;
 import cn.lichuachua.mp_management.mp_managementserver.wrapper.ResultWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**

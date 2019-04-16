@@ -43,7 +43,7 @@ public class AnnouncementServiceImpl extends BaseServiceImpl<Announcement, Strin
      * @param adminId
      */
     @Override
-    public void publish(AnnouncementPublishForm announcementPublishForm, String adminId){
+    public void publish(AnnouncementPublishForm announcementPublishForm, String adminId, String fileName){
         /**
          * 保存公告信息
          */
@@ -62,7 +62,7 @@ public class AnnouncementServiceImpl extends BaseServiceImpl<Announcement, Strin
         announcement.setPublisherAvatar(adminOptional.get().getAdminAvatar());
         announcement.setPublisherNick(adminOptional.get().getAdminNick());
         announcement.setAnnouncementType(announcementPublishForm.getType());
-        announcement.setAccessory(announcementPublishForm.getAccessory());
+        announcement.setAccessory(fileName);
         save(announcement);
     }
 

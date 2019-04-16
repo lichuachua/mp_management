@@ -33,10 +33,4 @@ public class AnnouncementPublishForm {
      * 公告类型
      */
     private Integer type;
-
-    /**
-     * 公告附件
-     */
-    private String accessory;
-
 }
