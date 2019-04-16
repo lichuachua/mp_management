@@ -9,6 +9,7 @@ import cn.lichuachua.mp_management.mp_managementserver.form.SendCodeForm;
 import cn.lichuachua.mp_management.mp_managementserver.form.AdminLoginForm;
 import cn.lichuachua.mp_management.mp_managementserver.form.AdminRegisterForm;
 import cn.lichuachua.mp_management.mp_managementserver.service.IAdminService;
+import cn.lichuachua.mp_management.mp_managementserver.util.FileUtil;
 import cn.lichuachua.mp_management.mp_managementserver.vo.AdminListVO;
 import cn.lichuachua.mp_management.mp_managementserver.vo.AdminVO;
 import cn.lichuachua.mp_management.mp_managementserver.wrapper.ResultWrapper;
@@ -18,6 +19,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -221,7 +223,10 @@ public class AdminController extends BaseController<AdminInfoDTO> {
         return ResultWrapper.success();
     }
 
-
+    /**
+     * 显示当前登录的管理员信息
+     * @return
+     */
     @ApiOperation("显示当前登录的管理员信息")
     @GetMapping("/queryMyInformation")
     public ResultWrapper<AdminVO> queryMyInformation(){
@@ -231,5 +236,31 @@ public class AdminController extends BaseController<AdminInfoDTO> {
         String adminId = getCurrentUserInfo().getUserId();
         AdminVO adminVO = adminService.queryMyInformation(adminId);
         return ResultWrapper.successWithData(adminVO);
+    }
+
+
+    /**
+     * 更换头像
+     * @param file
+     * @return
+     */
+    @ApiOperation("更换头像")
+    @PutMapping("/updateAvatar/{file}")
+    public ResultWrapper updateAvatar(
+            @PathVariable(value = "file") MultipartFile file) {
+        String filePath = "C:/Users/Administrator/Desktop/Mp/mp_management/src/main/resources/static/avatar/";
+        String fileName = file.getOriginalFilename();
+        try {
+            FileUtil.uploadFile(file.getBytes(), filePath, fileName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        /**
+         * 获取当前登录用户
+         */
+        String adminId= getCurrentUserInfo().getUserId();
+        adminService.updateAvatar(fileName, adminId);
+        return ResultWrapper.success();
     }
 }

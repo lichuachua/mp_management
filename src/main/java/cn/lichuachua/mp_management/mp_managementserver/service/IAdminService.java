@@ -79,6 +79,17 @@ public interface IAdminService extends IBaseService<Admin, String> {
     void updatedStatus(String adminId1, String adminId, Integer status);
 
 
+    /**
+     * 显示当前登录的管理员信息
+     * @param adminId
+     * @return
+     */
     AdminVO queryMyInformation(String adminId);
 
+    /**
+     * 更换头像
+     * @param fileName
+     * @param adminId
+     */
+    void updateAvatar(String fileName, String adminId);
 }

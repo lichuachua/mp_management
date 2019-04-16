@@ -412,4 +412,40 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin,String> implements I
         return adminVO;
     }
 
+
+    /**
+     * 更换头像
+     * @param fileName
+     * @param adminId
+     */
+    @Override
+    public void updateAvatar(String fileName, String adminId){
+        /**
+         * 查看用户是否存在
+         */
+        Admin admin = new Admin();
+        admin.setAdminId(adminId);
+        admin.setStatus(AdminStatusEnum.NORMAL.getStatus());
+        Optional<Admin> adminOptional = selectOne(Example.of(admin));
+        if (!adminOptional.isPresent()){
+            throw new AdminException(ErrorCodeEnum.ADMIN_NO_EXIT);
+        }
+        admin.setRank(adminOptional.get().getRank());
+        admin.setUpdatedAt(new Date());
+        admin.setCreatedAt(adminOptional.get().getCreatedAt());
+        admin.setGiverName(adminOptional.get().getGiverName());
+        admin.setGiverMobile(adminOptional.get().getMobile());
+        admin.setGiverId(adminOptional.get().getGiverId());
+        admin.setAdminNumber(adminOptional.get().getAdminNumber());
+        admin.setAdminNick(adminOptional.get().getAdminNick());
+        admin.setAdminName(adminOptional.get().getAdminName());
+        admin.setAdminEmail(adminOptional.get().getAdminEmail());
+        admin.setAdminAvatar(fileName);
+        admin.setSchoolId(adminOptional.get().getSchoolId());
+        admin.setAcademyId(adminOptional.get().getAcademyId());
+        admin.setMobile(adminOptional.get().getMobile());
+        admin.setPassword(adminOptional.get().getPassword());
+        update(admin);
+    }
+
 }
