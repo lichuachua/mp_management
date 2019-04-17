@@ -16,6 +16,7 @@ import java.util.List;
 /**
  * @author 李歘歘
  */
+@CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
 @Api(value = "AcademyController", tags = {"学院类API"})
 @RestController
 @RequestMapping(value = "/admin/academy")

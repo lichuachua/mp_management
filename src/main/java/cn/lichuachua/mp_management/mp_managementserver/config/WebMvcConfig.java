@@ -23,6 +23,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(
+                        "/*",
+                        "/css/**",
+                        "/fonts/**",
+                        "/images/**",
+                        "/js/**",
+                        "/model/**",
                         "/error",
                         "/swagger-resources/**",
                         "/webjars/**",

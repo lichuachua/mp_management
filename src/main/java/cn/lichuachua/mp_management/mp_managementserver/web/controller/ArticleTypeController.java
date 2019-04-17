@@ -17,6 +17,7 @@ import java.util.List;
 /**
  * @author 李歘歘
  */
+@CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
 @Api(value = "ArticleTypeController", tags = {"文章类型API"})
 @RestController
 @RequestMapping(value = "/article/type")

@@ -25,6 +25,7 @@ import java.util.List;
  * @author 李歘歘
  * 用户接口
  */
+@CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
 @Api(value = "AdminController", tags = {"管理员API"})
 @RestController
 @RequestMapping(value = "/admin")

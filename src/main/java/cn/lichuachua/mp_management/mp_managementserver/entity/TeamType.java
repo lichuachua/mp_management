@@ -1,5 +1,6 @@
 package cn.lichuachua.mp_management.mp_managementserver.entity;
 
+import io.swagger.models.auth.In;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,6 +16,9 @@ public class TeamType {
 
     @Column(name = "type_name")
     private String typeName;
+
+    @Column(name = "status")
+    private Integer status;
 
     @Column(name = "created_at")
     private Date createdAt;

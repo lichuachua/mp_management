@@ -19,6 +19,7 @@ import java.util.List;
 /**
  * @author 李歘歘
  */
+@CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
 @Api(value = "AdminCommentController", tags = {"管理评论日志API"})
 @RestController
 @RequestMapping(value = "/admin/comment/log")

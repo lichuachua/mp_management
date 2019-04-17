@@ -76,6 +76,7 @@ public enum ErrorCodeEnum {
     /**
      * 队伍类型不存在
      */
+    TEAM_TYPE_EXIT(12111,"该队伍类型已存在"),
     TEAM_TYPE_NO_EXIT(12111,"该队伍类型不存在"),
     TEAM_RESOURCE_NO_EXIT(12111,"该资源不存在"),
     /**
