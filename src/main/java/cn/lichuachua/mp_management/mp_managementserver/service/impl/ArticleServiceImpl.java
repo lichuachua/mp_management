@@ -113,16 +113,9 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, String> impleme
                 articleListVO.setUpdatedAt(article.getUpdatedAt());
                 articleListVO.setVisual(article.getVisual());
                 /**
-                 * 根据typeId取出对应的类型名
+                 * 调用根据typeId查询typeName
                  */
-                ArticleType articleType = new ArticleType();
-                articleType.setTypeId(article.getArticleType());
-                Optional<ArticleType> articleTypeOptional = articleTypeService.selectOne(Example.of(articleType));
-                if (articleTypeOptional.isPresent()){
-                    articleListVO.setArticleType(articleTypeOptional.get().getTypeName());
-                }else {
-                    articleListVO.setArticleType(null);
-                }
+                articleListVO.setArticleType(articleTypeService.queryTypeName(article.getArticleType()));
                 articleListVOList.add(articleListVO);
             }
         }
@@ -151,16 +144,9 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, String> impleme
                 articleListVO.setUpdatedAt(article.getUpdatedAt());
                 articleListVO.setVisual(article.getVisual());
                 /**
-                 * 根据typeId取出对应的类型名
+                 * 调用根据typeId查询typeName
                  */
-                ArticleType articleType = new ArticleType();
-                articleType.setTypeId(article.getArticleType());
-                Optional<ArticleType> articleTypeOptional = articleTypeService.selectOne(Example.of(articleType));
-                if (articleTypeOptional.isPresent()){
-                    articleListVO.setArticleType(articleTypeOptional.get().getTypeName());
-                }else {
-                    articleListVO.setArticleType(null);
-                }
+                articleListVO.setArticleType(articleTypeService.queryTypeName(article.getArticleType()));
                 articleListVOList.add(articleListVO);
             }
         }
@@ -189,16 +175,9 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, String> impleme
                 articleListVO.setUpdatedAt(article.getUpdatedAt());
                 articleListVO.setVisual(article.getVisual());
                 /**
-                 * 根据typeId取出对应的类型名并且等级为空
+                 * 调用根据typeId查询typeName
                  */
-                ArticleType articleType = new ArticleType();
-                articleType.setTypeId(article.getArticleType());
-                Optional<ArticleType> articleTypeOptional = articleTypeService.selectOne(Example.of(articleType));
-                if (articleTypeOptional.isPresent()){
-                    articleListVO.setArticleType(articleTypeOptional.get().getTypeName());
-                }else {
-                    articleListVO.setArticleType(null);
-                }
+                articleListVO.setArticleType(articleTypeService.queryTypeName(article.getArticleType()));
                 articleListVOList.add(articleListVO);
             }
         }

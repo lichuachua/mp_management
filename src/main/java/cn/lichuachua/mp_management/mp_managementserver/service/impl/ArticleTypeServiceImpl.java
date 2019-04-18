@@ -75,5 +75,25 @@ public class ArticleTypeServiceImpl extends BaseServiceImpl<ArticleType, Integer
         return articleTypeVOList;
     }
 
+    /**
+     * @根据typeId 查询出typeName
+     * @param typeId
+     * @return
+     */
+    @Override
+    public String queryTypeName(Integer typeId) {
+        /**
+         * 根据typeId取出对应的类型名
+         */
+        ArticleType articleType = new ArticleType();
+        articleType.setTypeId(typeId);
+        Optional<ArticleType> articleTypeOptional = selectOne(Example.of(articleType));
+        if (articleTypeOptional.isPresent()){
+            return articleTypeOptional.get().getTypeName();
+        }else {
+            return null;
+        }
+    }
+
 
 }
