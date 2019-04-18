@@ -8,6 +8,7 @@ import cn.lichuachua.mp_management.mp_managementserver.enums.TeamVisualEnum;
 import cn.lichuachua.mp_management.mp_managementserver.exception.TeamException;
 import cn.lichuachua.mp_management.mp_managementserver.service.ITeamMemberService;
 import cn.lichuachua.mp_management.mp_managementserver.service.ITeamService;
+import cn.lichuachua.mp_management.mp_managementserver.service.ITeamTypeService;
 import cn.lichuachua.mp_management.mp_managementserver.vo.TeamListVO;
 import cn.lichuachua.mp_management.mp_managementserver.vo.TeamVO;
 import org.springframework.beans.BeanUtils;
@@ -29,6 +30,8 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, String> implements IT
 
     @Autowired
     private ITeamMemberService teamMemberService;
+    @Autowired
+    private ITeamTypeService teamTypeService;
 
     /**
      * 禁用队伍
@@ -124,7 +127,7 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, String> implements IT
                 teamListVO.setHeaderNick(team.getHeaderNick());
                 teamListVO.setTeamId(team.getTeamId());
                 teamListVO.setTeamName(team.getTeamName());
-                teamListVO.setType(team.getType());
+                teamListVO.setType(teamTypeService.queryTypeName(team.getType()));
                 BeanUtils.copyProperties(team, teamListVO);
                 teamListVOList.add(teamListVO);
             }
@@ -144,6 +147,7 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, String> implements IT
          */
         Team team = new Team();
         team.setTeamId(teamId);
+        team.setStatus(TeamStatusEnum.NORMAL.getStatus());
         Optional<Team> teamOptional = selectOne(Example.of(team));
         if (!teamOptional.isPresent()){
             throw new TeamException(ErrorCodeEnum.TEAM_NO_EXIT);
@@ -154,7 +158,7 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, String> implements IT
         teamVO.setHeaderId(teamOptional.get().getHeaderId());
         teamVO.setHeaderAvatar(teamOptional.get().getHeaderAvatar());
         teamVO.setHeaderNick(teamOptional.get().getHeaderNick());
-        teamVO.setType(team.getType());
+        teamVO.setType(teamTypeService.queryTypeName(teamOptional.get().getType()));
         teamVO.setCreatedAt(teamOptional.get().getCreatedAt());
         teamVO.setTeamMemberVOList(teamMemberService.queryList(teamId));
         return teamVO;

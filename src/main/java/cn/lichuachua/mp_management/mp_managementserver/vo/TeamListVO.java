@@ -19,7 +19,7 @@ public class TeamListVO {
 
     private String headerAvatar;
 
-    private Integer type;
+    private String type;
 
     private String visual;
 

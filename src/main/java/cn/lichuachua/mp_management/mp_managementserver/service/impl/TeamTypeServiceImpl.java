@@ -80,4 +80,22 @@ public class TeamTypeServiceImpl extends BaseServiceImpl<TeamType, String> imple
         update(teamType);
     }
 
+
+    @Override
+
+    public String queryTypeName(Integer typeId){
+        /**
+         * 查看该类型是否存在
+         */
+        TeamType teamType = new TeamType();
+        teamType.setTypeId(typeId);
+        teamType.setStatus(TeamTypeEnum.NORMAL.getStatus());
+        Optional<TeamType> teamTypeOptional = selectOne(Example.of(teamType));
+        if (teamTypeOptional.isPresent()){
+            return teamTypeOptional.get().getTypeName();
+        }else {
+            return null;
+        }
+    }
+
 }

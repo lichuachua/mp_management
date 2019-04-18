@@ -21,7 +21,7 @@ public class TeamVO {
 
     private String headerAvatar;
 
-    private Integer type;
+    private String type;
 
     private Date createdAt;
 

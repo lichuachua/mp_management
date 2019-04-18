@@ -28,4 +28,12 @@ public interface ITeamTypeService extends IBaseService<TeamType, String> {
      * @param typeId
      */
     void deleted(Integer typeId);
+
+    /**
+     * 根据typeId查询typeName
+     * @param typeId
+     * @return
+     */
+    String queryTypeName(Integer typeId);
+
 }
