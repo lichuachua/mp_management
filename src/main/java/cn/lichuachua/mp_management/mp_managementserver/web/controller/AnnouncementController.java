@@ -23,7 +23,7 @@ import java.util.List;
 /**
  *@author 李歘歘
  */
-@CrossOrigin(origins = "http://localhost:8080", maxAge = 3600)
+@CrossOrigin(origins = "http://127.0.0.1:8080", maxAge = 3600)
 @Api(value = "AnnouncementController", tags = {"公告日志API"})
 @RestController
 @RequestMapping(value = "/announcement")

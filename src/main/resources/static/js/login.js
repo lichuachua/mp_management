@@ -14,7 +14,7 @@ $("#button").click(function () {
     let formdata = JSON.stringify(obj);
     console.log(obj);
     $.ajax({
-        url: "http://127.0.0.1:8080/admin/login",
+        url: "http://localhost:8080/admin/login",
         contentType : 'application/json',
         data: formdata,
         type: 'POST',
