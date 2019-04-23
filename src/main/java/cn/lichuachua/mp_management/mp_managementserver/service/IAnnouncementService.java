@@ -52,4 +52,11 @@ public interface IAnnouncementService extends IBaseService<Announcement, String>
      */
     AnnouncementDeleteVO queryDelete(String announcementId);
 
+    /**
+     * 更新头像
+     * @param adminId
+     * @param fileName
+     */
+    void updateAvatar(String adminId, String fileName);
+
 }

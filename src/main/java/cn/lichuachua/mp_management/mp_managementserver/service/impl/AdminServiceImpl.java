@@ -16,10 +16,7 @@ import cn.lichuachua.mp_management.mp_managementserver.exception.AdminException;
 import cn.lichuachua.mp_management.mp_managementserver.exception.UserException;
 import cn.lichuachua.mp_management.mp_managementserver.form.*;
 import cn.lichuachua.mp_management.mp_managementserver.repository.redis.IRedisRepository;
-import cn.lichuachua.mp_management.mp_managementserver.service.IAcademyService;
-import cn.lichuachua.mp_management.mp_managementserver.service.IAdminService;
-import cn.lichuachua.mp_management.mp_managementserver.service.ISchoolService;
-import cn.lichuachua.mp_management.mp_managementserver.service.IUserService;
+import cn.lichuachua.mp_management.mp_managementserver.service.*;
 import cn.lichuachua.mp_management.mp_managementserver.util.MD5Util;
 import cn.lichuachua.mp_management.mp_managementserver.util.SendCodeUtil;
 import cn.lichuachua.mp_management.mp_managementserver.vo.AdminListVO;
@@ -54,6 +51,9 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin,String> implements I
 
     @Autowired
     private IAcademyService academyService;
+
+    @Autowired
+    private IAnnouncementService announcementService;
 
     /**
      * 给予管理员权限
@@ -444,9 +444,18 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin,String> implements I
         admin.setMobile(adminOptional.get().getMobile());
         admin.setPassword(adminOptional.get().getPassword());
         update(admin);
+        /**
+         * 同步更新announcement表的头像
+         */
+        announcementService.updateAvatar(adminId, fileName);
     }
 
 
+    /**
+     * 修改管理员信息
+     * @param adminInforForm
+     * @param adminId
+     */
     @Override
     public void infor(AdminInforForm adminInforForm, String adminId){
         /**

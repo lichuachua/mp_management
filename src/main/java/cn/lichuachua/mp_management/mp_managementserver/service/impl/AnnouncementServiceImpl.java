@@ -294,4 +294,35 @@ public class AnnouncementServiceImpl extends BaseServiceImpl<Announcement, Strin
         return announcementDeleteVO;
     }
 
+
+    /**
+     * 更新头像
+     * @param adminId
+     * @param fileName
+     */
+    @Override
+    public void updateAvatar(String adminId, String fileName){
+        List<Announcement> announcementList = selectAll();
+        for (Announcement announcement : announcementList){
+            if (announcement.getPublisherId().equals(adminId)){
+                Announcement announcement1 = new Announcement();
+                announcement1.setAnnouncementId(announcement.getAnnouncementId());
+                announcement1.setPublisherAvatar(fileName);
+                announcement1.setStatus(announcement.getStatus());
+                announcement1.setAnnouncementType(announcement.getAnnouncementType());
+                announcement1.setAccessory(announcement.getAccessory());
+                announcement1.setContent(announcement.getContent());
+                announcement1.setCreatedAt(announcement.getCreatedAt());
+                announcement1.setPublisherId(announcement.getPublisherId());
+                announcement1.setPublisherNick(announcement.getPublisherNick());
+                announcement1.setRank(announcement.getRank());
+                announcement1.setTitle(announcement.getTitle());
+                announcement1.setUpdatedAt(announcement.getUpdatedAt());
+                announcement1.setDeleterMobile(announcement.getDeleterMobile());
+                announcement1.setDeleterId(announcement.getDeleterId());
+                update(announcement1);
+            }
+        }
+    }
+
 }
