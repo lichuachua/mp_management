@@ -60,7 +60,7 @@ public class AnnouncementController extends BaseController<AdminInfoDTO> {
          */
         if (file!=(null)) {
             //文件路径
-            String filePath = "C:/Users/Administrator/Desktop/Mp/mp_management/src/main/resources/static/announcement/";
+            String filePath = "/static/announcement/";
             //文件名
             String fileName = file.getOriginalFilename();
             /**

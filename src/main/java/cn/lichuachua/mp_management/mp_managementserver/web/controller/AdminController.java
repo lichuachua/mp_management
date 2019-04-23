@@ -246,7 +246,7 @@ public class AdminController extends BaseController<AdminInfoDTO> {
     @PutMapping("/updateAvatar/{file}")
     public ResultWrapper updateAvatar(
             @PathVariable(value = "file") MultipartFile file) {
-        String filePath = "C:/Users/Administrator/Desktop/Mp/mp_management/src/main/resources/static/avatar/";
+        String filePath = "/static/avatar/";
         String fileName = file.getOriginalFilename();
         try {
             FileUtil.uploadFile(file.getBytes(), filePath, fileName);

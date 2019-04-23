@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 public class FileUtil {
-    public static void uploadFile(byte[] file, String filePath, String fileName) throws Exception {
+    public static void uploadFile(byte[] file, String path, String fileName) throws Exception {
+        String rootPath = "C:/Users/Administrator/Desktop/Mp/mp_management/src/main/resources";
+        String filePath = rootPath+path;
         File targetFile = new File(String.valueOf(filePath));
         if(!targetFile.exists()){
             targetFile.mkdirs();
