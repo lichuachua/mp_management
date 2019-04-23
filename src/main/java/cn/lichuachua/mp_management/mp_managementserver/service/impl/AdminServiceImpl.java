@@ -20,6 +20,7 @@ import cn.lichuachua.mp_management.mp_managementserver.service.IAcademyService;
 import cn.lichuachua.mp_management.mp_managementserver.service.IAdminService;
 import cn.lichuachua.mp_management.mp_managementserver.service.ISchoolService;
 import cn.lichuachua.mp_management.mp_managementserver.service.IUserService;
+import cn.lichuachua.mp_management.mp_managementserver.util.MD5Util;
 import cn.lichuachua.mp_management.mp_managementserver.util.SendCodeUtil;
 import cn.lichuachua.mp_management.mp_managementserver.vo.AdminListVO;
 import cn.lichuachua.mp_management.mp_managementserver.vo.AdminVO;
@@ -167,7 +168,7 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin,String> implements I
         /**
          * 判断密码是否正确
          */
-        if (!adminLoginForm.getPassword().equals(admin.getPassword())){
+        if (!MD5Util.string2MD5(adminLoginForm.getPassword()).equals(admin.getPassword())){
             throw new AdminException(ErrorCodeEnum.PASSWORD_ERROR);
         }
 
