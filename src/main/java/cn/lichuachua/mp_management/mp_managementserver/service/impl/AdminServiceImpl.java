@@ -305,6 +305,7 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin,String> implements I
         for (Admin admin : adminList){
             AdminListVO adminListVO = new AdminListVO();
             if (admin.getStatus().equals(status)){
+                adminListVO.setAdminId(admin.getAdminId());
                 adminListVO.setAdminName(admin.getAdminName());
                 adminListVO.setAdminEmail(admin.getAdminEmail());
                 adminListVO.setAdminMobile(admin.getMobile());

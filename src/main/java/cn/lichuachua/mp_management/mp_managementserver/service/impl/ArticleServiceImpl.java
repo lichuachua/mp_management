@@ -185,4 +185,54 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, String> impleme
     }
 
 
+    /**
+     * 根据文章状态对文章进行操作
+     * @param adminId
+     * @param articleId
+     * @param status
+     */
+    @Override
+    public void updatedArticleStatus(String adminId, String articleId, Integer status){
+        /**
+         * 查看文章是否存在
+         */
+        Article article = new Article();
+        article.setArticleId(articleId);
+        article.setStatus(status);
+        Optional<Article> articleOptional = selectOne(Example.of(article));
+        if (!articleOptional.isPresent()){
+            throw new ArticleException(ErrorCodeEnum.ARTICLE_NO_EXIT);
+        }
+
+        /**
+         * 更改文章状态
+         */
+        if (status.equals(ArticleStatusEnum.NORMAL.getStatus())){
+            article.setStatus(ArticleStatusEnum.DISABLED.getStatus());
+        }else if (status.equals(ArticleStatusEnum.DISABLED.getStatus())){
+            article.setStatus(ArticleStatusEnum.NORMAL.getStatus());
+        }
+
+        article.setAccessory(articleOptional.get().getAccessory());
+        article.setArticleType(articleOptional.get().getArticleType());
+        article.setVisual(articleOptional.get().getVisual());
+        article.setPublisherNick(articleOptional.get().getPublisherNick());
+        article.setPublisherAvatar(articleOptional.get().getPublisherAvatar());
+        article.setPublisherId(articleOptional.get().getPublisherId());
+        article.setUpdatedAt(new Date());
+        article.setCreatedAt(articleOptional.get().getCreatedAt());
+        article.setTitle(articleOptional.get().getTitle());
+        article.setContent(articleOptional.get().getContent());
+        article.setRank(articleOptional.get().getRank());
+        /**
+         * 写入操作表
+         */
+        adminArticleService.addLog(adminId,articleId,status);
+        /**
+         * 更新文章状态
+         */
+        update(article);
+    }
+
+
 }

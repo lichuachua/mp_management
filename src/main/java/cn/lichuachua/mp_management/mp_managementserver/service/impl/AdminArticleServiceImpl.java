@@ -4,6 +4,7 @@ import cn.lichuachua.mp_management.core.support.service.impl.BaseServiceImpl;
 import cn.lichuachua.mp_management.mp_managementserver.entity.Admin;
 import cn.lichuachua.mp_management.mp_managementserver.entity.AdminArticle;
 import cn.lichuachua.mp_management.mp_managementserver.entity.Article;
+import cn.lichuachua.mp_management.mp_managementserver.entity.User;
 import cn.lichuachua.mp_management.mp_managementserver.enums.ArticleStatusEnum;
 import cn.lichuachua.mp_management.mp_managementserver.enums.ErrorCodeEnum;
 import cn.lichuachua.mp_management.mp_managementserver.enums.InformOperationTypeEnum;
@@ -12,6 +13,7 @@ import cn.lichuachua.mp_management.mp_managementserver.exception.InformArticleEx
 import cn.lichuachua.mp_management.mp_managementserver.service.IAdminArticleService;
 import cn.lichuachua.mp_management.mp_managementserver.service.IAdminService;
 import cn.lichuachua.mp_management.mp_managementserver.service.IArticleService;
+import cn.lichuachua.mp_management.mp_managementserver.service.IUserService;
 import cn.lichuachua.mp_management.mp_managementserver.vo.NoOperationArticleVO;
 import cn.lichuachua.mp_management.mp_managementserver.vo.OperationArticleVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,8 @@ public class AdminArticleServiceImpl extends BaseServiceImpl<AdminArticle, Strin
     private IAdminService adminService;
     @Autowired
     private IArticleService articleService;
+    @Autowired
+    private IUserService userService;
 
     @Override
     public  void publish(String operationId, String adminId, Integer status){
@@ -202,6 +206,45 @@ public class AdminArticleServiceImpl extends BaseServiceImpl<AdminArticle, Strin
             }
         }
         return operationArticleVOList;
+    }
+
+
+    /**
+     * 写入日志
+     * @param adminId
+     * @param articleId
+     * @param status
+     */
+    @Override
+    public void addLog(String adminId, String articleId, Integer status){
+        AdminArticle adminArticle = new AdminArticle();
+        adminArticle.setAdminId(adminId);
+        adminArticle.setArticleId(articleId);
+        if (status.equals(ArticleStatusEnum.NORMAL.getStatus())){
+            adminArticle.setOperationType(ArticleStatusEnum.DISABLED.getStatus());
+        }else if (status.equals(ArticleStatusEnum.DISABLED.getStatus())){
+            adminArticle.setOperationType(ArticleStatusEnum.NORMAL.getStatus());
+        }
+        /**
+         * 根据adminId找出adminMobile
+         */
+        Optional<Admin> adminOptional = adminService.selectByKey(adminId);
+        adminArticle.setAdminMobile(adminOptional.get().getMobile());
+        /**
+         * 查询出举报文章的信息
+         */
+        Optional<Article> articleOptional = articleService.selectByKey(articleId);
+        adminArticle.setArticleTitle(articleOptional.get().getTitle());
+        adminArticle.setCreatedAt(new Date());
+        adminArticle.setUpdatedAt(new Date());
+        adminArticle.setInformedId(articleOptional.get().getPublisherId());
+        /**
+         * 查询出被举报文章作者的信息
+         */
+        Optional<User> userOptional = userService.selectByKey(articleOptional.get().getPublisherId());
+        adminArticle.setInformedMobile(userOptional.get().getMobile());
+        adminArticle.setInformedName(userOptional.get().getUserName());
+        save(adminArticle);
     }
 
 }

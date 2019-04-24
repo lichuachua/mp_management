@@ -38,4 +38,12 @@ public interface IArticleService extends IBaseService<Article, String> {
      */
     List<ArticleListVO> queryDisabledList();
 
+    /**
+     * 根据文章状态对文章进行操作
+     * @param adminId
+     * @param articleId
+     * @param status
+     */
+    void updatedArticleStatus(String adminId, String articleId, Integer status);
+
 }

@@ -3,6 +3,7 @@ package cn.lichuachua.mp_management.mp_managementserver.web.controller;
 
 import cn.lichuachua.mp_management.core.support.web.controller.BaseController;
 import cn.lichuachua.mp_management.mp_managementserver.dto.AdminInfoDTO;
+import cn.lichuachua.mp_management.mp_managementserver.enums.AdminStatusEnum;
 import cn.lichuachua.mp_management.mp_managementserver.service.IArticleService;
 import cn.lichuachua.mp_management.mp_managementserver.vo.ArticleListVO;
 import cn.lichuachua.mp_management.mp_managementserver.wrapper.ResultWrapper;
@@ -83,6 +84,43 @@ public class ArticleController extends BaseController<AdminInfoDTO> {
         return ResultWrapper.successWithData(articleListVOList);
     }
 
+    /**
+     * 解除管理员
+     * @return
+     */
+    @ApiOperation("禁用文章")
+    @GetMapping("/disabled/{articleId}")
+    public ResultWrapper disabled(
+            @PathVariable(value = "articleId") String articleId){
+        /**
+         * 获取当前登录的用户Id
+         */
+        String adminId = getCurrentUserInfo().getUserId();
+        /**
+         * 传入当前的管理员状态
+         */
+        articleService.updatedArticleStatus(adminId,articleId, AdminStatusEnum.NORMAL.getStatus());
+        return ResultWrapper.success();
+    }
 
+
+    /**
+     * 恢复管理员
+     * @return
+     */
+    @ApiOperation("恢复禁用文章")
+    @GetMapping("/relieve/{articleId}")
+    public ResultWrapper relieve(
+            @PathVariable(value = "articleId") String articleId){
+        /**
+         * 获取当前登录的用户Id
+         */
+        String adminId = getCurrentUserInfo().getUserId();
+        /**
+         * 传入当前的管理员状态
+         */
+        articleService.updatedArticleStatus(adminId,articleId,AdminStatusEnum.DISABLED.getStatus());
+        return ResultWrapper.success();
+    }
 
 }

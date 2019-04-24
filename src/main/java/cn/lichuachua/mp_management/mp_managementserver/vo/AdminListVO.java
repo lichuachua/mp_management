@@ -10,6 +10,8 @@ import java.util.Date;
 @Data
 public class AdminListVO {
 
+    private String adminId;
+
     private String adminName;
 
     private String adminMobile;

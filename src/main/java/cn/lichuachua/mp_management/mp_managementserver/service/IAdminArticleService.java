@@ -38,5 +38,12 @@ public interface IAdminArticleService extends IBaseService<AdminArticle, String>
     List<OperationArticleVO> queryList();
 
 
+    /**
+     * 写入日志
+     * @param adminId
+     * @param articleId
+     * @param status
+     */
+    void addLog(String adminId, String articleId, Integer status);
 
 }
