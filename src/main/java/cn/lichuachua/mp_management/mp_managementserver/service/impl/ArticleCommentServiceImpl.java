@@ -32,6 +32,9 @@ public class ArticleCommentServiceImpl extends BaseServiceImpl<ArticleComment, S
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private IArticleCommentService articleCommentService;
+
     /**
      * 管理评论举报
      * @param operationId
@@ -188,6 +191,44 @@ public class ArticleCommentServiceImpl extends BaseServiceImpl<ArticleComment, S
             }
         }
         return articleCommentListVOList;
+    }
+
+    @Override
+    public void updatedArticleStatus(String adminId, String commentId, Integer status){
+        /**
+         * 查看评论是否存在
+         */
+        ArticleComment articleComment = new ArticleComment();
+        articleComment.setCommentId(commentId);
+        articleComment.setStatus(status);
+        Optional<ArticleComment> articleCommentOptional = selectOne(Example.of(articleComment));
+        if (!articleCommentOptional.isPresent()){
+            throw new ArticleCommentException(ErrorCodeEnum.COMMENT_NO);
+        }
+        /**
+         * 更改评论状态
+         */
+        if (status.equals(CommentEnum.COMMENT_EXIT.getStatus())){
+            articleComment.setStatus(CommentEnum.COMMENT_DISABLE.getStatus());
+        }else if (status.equals(CommentEnum.COMMENT_DISABLE.getStatus())){
+            articleComment.setStatus(CommentEnum.COMMENT_EXIT.getStatus());
+        }
+        articleComment.setUpdatedAt(new Date());
+        articleComment.setThread(articleCommentOptional.get().getThread());
+        articleComment.setParentId(articleCommentOptional.get().getParentId());
+        articleComment.setDepth(articleCommentOptional.get().getDepth());
+        articleComment.setCreatedAt(articleCommentOptional.get().getCreatedAt());
+        articleComment.setContent(articleCommentOptional.get().getContent());
+        articleComment.setCommentUserId(articleCommentOptional.get().getCommentUserId());
+
+        /**
+         * 写入日志
+         */
+        adminCommentService.addLog(adminId,commentId,status);
+        /**
+         * 更新状态
+         */
+        update(articleComment);
     }
 
 

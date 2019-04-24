@@ -35,4 +35,13 @@ public interface IAdminCommentService extends IBaseService<AdminComment, String>
      * @return
      */
     List<OperationCommentVO> queryList();
+
+    /**
+     * 写入日志
+     * @param adminId
+     * @param commentId
+     * @param status
+     */
+    void addLog(String adminId, String commentId, Integer status);
+
 }

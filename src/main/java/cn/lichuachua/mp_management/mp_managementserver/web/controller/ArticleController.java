@@ -85,7 +85,7 @@ public class ArticleController extends BaseController<AdminInfoDTO> {
     }
 
     /**
-     * 解除管理员
+     * 禁用文章
      * @return
      */
     @ApiOperation("禁用文章")
@@ -105,7 +105,7 @@ public class ArticleController extends BaseController<AdminInfoDTO> {
 
 
     /**
-     * 恢复管理员
+     * 恢复禁用文章
      * @return
      */
     @ApiOperation("恢复禁用文章")

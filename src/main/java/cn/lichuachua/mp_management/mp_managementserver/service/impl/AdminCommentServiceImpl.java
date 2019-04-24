@@ -28,6 +28,8 @@ public class AdminCommentServiceImpl extends BaseServiceImpl<AdminComment, Strin
     private IAdminService adminService;
     @Autowired
     private IArticleCommentService articleCommentService;
+    @Autowired
+    private IUserService userService;
 
     @Override
     public void publish(String operationId, String adminId, Integer status){
@@ -195,5 +197,44 @@ public class AdminCommentServiceImpl extends BaseServiceImpl<AdminComment, Strin
             }
 
         return operationCommentVOList;
+    }
+
+
+    /**
+     * 写入日志
+     * @param adminId
+     * @param commentId
+     * @param status
+     */
+    @Override
+    public void addLog(String adminId, String commentId, Integer status){
+        AdminComment adminComment = new AdminComment();
+        adminComment.setCommentId(commentId);
+        adminComment.setAdminId(adminId);
+        adminComment.setUpdatedAt(new Date());
+        adminComment.setCreatedAt(new Date());
+        if (status.equals(CommentEnum.COMMENT_EXIT.getStatus())){
+            adminComment.setOperationType(CommentEnum.COMMENT_DISABLE.getStatus());
+        }else if (status.equals(CommentEnum.COMMENT_DISABLE.getStatus())){
+            adminComment.setOperationType(CommentEnum.COMMENT_EXIT.getStatus());
+        }
+        /**
+         * 根据adminId找出adminMobile
+         */
+        Optional<Admin> adminOptional = adminService.selectByKey(adminId);
+        adminComment.setAdminMobile(adminOptional.get().getMobile());
+        /**
+         * 查询出评论信息
+         */
+        Optional<ArticleComment> articleCommentOptional = articleCommentService.selectByKey(commentId);
+        adminComment.setCommentContent(articleCommentOptional.get().getContent());
+        adminComment.setInformedId(articleCommentOptional.get().getCommentUserId());
+        /**
+         * 查询评论人信息
+         */
+        Optional<User> userOptional = userService.selectByKey(articleCommentOptional.get().getCommentUserId());
+        adminComment.setInformedMobile(userOptional.get().getMobile());
+        adminComment.setInformedName(userOptional.get().getUserName());
+        save(adminComment);
     }
 }

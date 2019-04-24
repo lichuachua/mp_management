@@ -32,4 +32,12 @@ public interface IArticleCommentService extends IBaseService<ArticleComment, Str
      * @return
      */
     List<ArticleCommentListVO> queryDisabledList();
+
+    /**
+     *根据评论状态对评论进行操作
+     * @param adminId
+     * @param commentId
+     * @param status
+     */
+    void updatedArticleStatus(String adminId, String commentId, Integer status);
 }

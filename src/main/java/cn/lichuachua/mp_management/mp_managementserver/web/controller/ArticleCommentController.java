@@ -3,6 +3,7 @@ package cn.lichuachua.mp_management.mp_managementserver.web.controller;
 
 import cn.lichuachua.mp_management.core.support.web.controller.BaseController;
 import cn.lichuachua.mp_management.mp_managementserver.dto.AdminInfoDTO;
+import cn.lichuachua.mp_management.mp_managementserver.enums.AdminStatusEnum;
 import cn.lichuachua.mp_management.mp_managementserver.service.IArticleCommentService;
 import cn.lichuachua.mp_management.mp_managementserver.vo.ArticleCommentListVO;
 import cn.lichuachua.mp_management.mp_managementserver.wrapper.ResultWrapper;
@@ -87,5 +88,46 @@ public class ArticleCommentController extends BaseController<AdminInfoDTO> {
         List<ArticleCommentListVO> articleCommentListVOList = articleCommentService.queryDisabledList();
         return ResultWrapper.successWithData(articleCommentListVOList);
     }
+
+
+    /**
+     * 禁用评论
+     * @return
+     */
+    @ApiOperation("禁用评论")
+    @GetMapping("/disabled/{commentId}")
+    public ResultWrapper disabled(
+            @PathVariable(value = "commentId") String commentId){
+        /**
+         * 获取当前登录的用户Id
+         */
+        String adminId = getCurrentUserInfo().getUserId();
+        /**
+         * 传入当前的管理员状态
+         */
+        articleCommentService.updatedArticleStatus(adminId,commentId, AdminStatusEnum.NORMAL.getStatus());
+        return ResultWrapper.success();
+    }
+
+
+    /**
+     * 恢复禁用评论
+     * @return
+     */
+    @ApiOperation("恢复禁用评论")
+    @GetMapping("/relieve/{commentId}")
+    public ResultWrapper relieve(
+            @PathVariable(value = "commentId") String commentId){
+        /**
+         * 获取当前登录的用户Id
+         */
+        String adminId = getCurrentUserInfo().getUserId();
+        /**
+         * 传入当前的管理员状态
+         */
+        articleCommentService.updatedArticleStatus(adminId,commentId,AdminStatusEnum.DISABLED.getStatus());
+        return ResultWrapper.success();
+    }
+
 
 }
