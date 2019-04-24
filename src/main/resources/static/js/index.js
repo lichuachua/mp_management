@@ -3,7 +3,7 @@
  * @LastAuthor: Do not edit
  * @Github: https://github.com/tyutjohn
  * @since: 2019-04-11 09:03:00
- * @lastTime: 2019-04-11 10:32:47
+ * @lastTime: 2019-04-23 18:58:19
  */
 //设置token
 var token = document.cookie.split(";")[0];
@@ -218,5 +218,81 @@ var app=new Vue({
                 }
             });
         },
+        adminset:function(){
+            $.ajax({
+                url: '../model/adminset.html',
+                type: 'get',
+                success: function (res) {
+                    $('#model').html($(res));
+                },
+                error: function (res) {
+                    console.log(res)
+                }
+            });
+        },
+        adminuserset:function(){
+            $.ajax({
+                url: '../model/adminuserset.html',
+                type: 'get',
+                success: function (res) {
+                    $('#model').html($(res));
+                },
+                error: function (res) {
+                    console.log(res)
+                }
+            });
+        },
+        team_first:function(){
+            $.ajax({
+                url: '../model/team_manage.html',
+                type: 'get',
+                success: function (res) {
+                    $('#model').html($(res));
+                },
+                error: function (res) {
+                    console.log(res)
+                }
+            });
+        },
+        team_second:function(){
+            $.ajax({
+                url: '../model/team_type.html',
+                type: 'get',
+                success: function (res) {
+                    $('#model').html($(res));
+                },
+                error: function (res) {
+                    console.log(res)
+                }
+            });
+        },
+        //退出登陆
+        out:function(){
+            let appendForm = new FormData();
+            let token=document.querySelector('#token').value;
+            appendForm.append('accessToken',token);
+            this.$http.put('http://localhost:8080/admin/logout',appendForm,{
+                'Content-Type': 'Multipart/form-data'
+            }).then(
+                function(res){
+                        new $.zui.Messager('正在退出',{
+                            type:'success',
+                            placement:'center',
+                            icon:'icon-ok-sign'
+                        }).show();
+                        window.location.href='login.html';
+                        console.log(res)
+                },function(res){
+                        new $.zui.Messager('网络错误或找不到服务器',{
+                            type:'danger',
+                            placement:'center',
+                            icon:'icon-exclamation-sign'
+                        }).show();
+                    console.log(res)
+                }
+            ).catch(function(reason){
+                console.log(reason)
+            })
+        }
     }
 });

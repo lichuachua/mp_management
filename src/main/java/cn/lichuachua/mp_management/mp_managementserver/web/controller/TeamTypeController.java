@@ -54,7 +54,7 @@ public class TeamTypeController extends BaseController<AdminInfoDTO> {
      * @return
      */
     @ApiOperation("删除类型")
-    @GetMapping("/deleted/{typeId}")
+    @PutMapping("/deleted/{typeId}")
     public ResultWrapper deleted(
             @PathVariable(value = "typeId") Integer typeId ){
         teamTypeService.deleted(typeId);
