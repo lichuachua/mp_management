@@ -1,4 +1,4 @@
-package cn.lichuachua.mp_management.mp_managementserver;
+package cn.lichuachua.mp_management;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -12,6 +12,7 @@
 	<artifactId>mp_management</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>mp_management</name>
+	<packaging>war</packaging>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>

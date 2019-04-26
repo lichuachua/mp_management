@@ -1,4 +1,4 @@
-package cn.lichuachua.mp;
+package cn.lichuachua.mp_management;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class MpManagementApplicationTests {
+public class MutualPlatformManagementServerApplicationTests {
 
 	@Test
 	public void contextLoads() {
