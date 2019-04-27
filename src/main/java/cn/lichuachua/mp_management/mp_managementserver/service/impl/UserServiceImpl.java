@@ -3,6 +3,7 @@ package cn.lichuachua.mp_management.mp_managementserver.service.impl;
 
 import cn.lichuachua.mp_management.core.support.service.impl.BaseServiceImpl;
 import cn.lichuachua.mp_management.mp_managementserver.entity.User;
+import cn.lichuachua.mp_management.mp_managementserver.enums.EmailCodeEnum;
 import cn.lichuachua.mp_management.mp_managementserver.enums.ErrorCodeEnum;
 import cn.lichuachua.mp_management.mp_managementserver.enums.UserOperationTypeEnum;
 import cn.lichuachua.mp_management.mp_managementserver.enums.UserStatusEnum;
@@ -19,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static cn.lichuachua.mp_management.mp_managementserver.util.EmailUtil.send;
+
 
 /**
  * @author 李歘歘
@@ -72,6 +76,14 @@ public class UserServiceImpl extends BaseServiceImpl<User,String> implements IUs
              * 写入日志表
              */
             adminUserService.publish(adminId, userId, UserOperationTypeEnum.DELETED.getStatus());
+            /**
+             * 发送邮件提醒
+             */
+            try {
+                send(userOptional.get().getUserEmail(), EmailCodeEnum.USER_STATUS.getMessage(), EmailCodeEnum.USER.getMessage()+EmailCodeEnum.USER_DISABLED.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return 1;
         }else {
             user.setStatus(UserStatusEnum.NORMAL.getStatus());
@@ -80,6 +92,14 @@ public class UserServiceImpl extends BaseServiceImpl<User,String> implements IUs
              * 写入日志表
              */
             adminUserService.publish(adminId, userId, UserOperationTypeEnum.NORMAL.getStatus());
+            /**
+             * 发送邮件提醒
+             */
+            try {
+                send(userOptional.get().getUserEmail(), EmailCodeEnum.USER_STATUS.getMessage(), EmailCodeEnum.USER.getMessage()+EmailCodeEnum.USER_NORMAL.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return 0;
         }
     }
