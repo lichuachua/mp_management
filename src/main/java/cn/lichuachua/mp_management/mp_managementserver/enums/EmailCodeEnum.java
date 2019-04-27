@@ -24,7 +24,37 @@ public enum EmailCodeEnum {
      * 封禁用户
      * @param message
      */
-    USER_DISABLED("您的账号涉嫌不正当的发言或者操作，已经被管理员封禁，如需解封，请联系管理员");
+    USER_DISABLED("您的账号涉嫌不正当的发言或者操作，已经被管理员封禁，如需解封，请联系管理员"),
+
+    /**
+     * 文章管理中心
+     * @param message
+     */
+    ARTICLE_STATUS("文章管理中心"),
+
+    /**
+     * 文章标题描述
+     */
+    ARTICLE_TITLE("您的文章标题为"),
+
+    /**
+     * 文章封禁
+     */
+    ARTICLE_DISABLED("的文章中涉嫌违规，该文章已经被封禁，如需解封，请联系管理员"),
+
+    /**
+     * 文章解封
+     */
+    ARTICLE_NORMAL("的文章已经被解封，如需要进行其他操作，请联系管理员")
+
+
+
+
+
+
+    ;
+
+
 
 
     EmailCodeEnum(String message) {

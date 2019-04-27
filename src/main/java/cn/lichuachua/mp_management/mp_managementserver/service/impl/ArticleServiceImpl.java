@@ -3,15 +3,13 @@ package cn.lichuachua.mp_management.mp_managementserver.service.impl;
 import cn.lichuachua.mp_management.core.support.service.impl.BaseServiceImpl;
 import cn.lichuachua.mp_management.mp_managementserver.entity.AdminArticle;
 import cn.lichuachua.mp_management.mp_managementserver.entity.Article;
-import cn.lichuachua.mp_management.mp_managementserver.entity.ArticleType;
+import cn.lichuachua.mp_management.mp_managementserver.entity.User;
 import cn.lichuachua.mp_management.mp_managementserver.enums.ArticleStatusEnum;
+import cn.lichuachua.mp_management.mp_managementserver.enums.EmailCodeEnum;
 import cn.lichuachua.mp_management.mp_managementserver.enums.ErrorCodeEnum;
 import cn.lichuachua.mp_management.mp_managementserver.exception.ArticleException;
 import cn.lichuachua.mp_management.mp_managementserver.exception.InformArticleException;
-import cn.lichuachua.mp_management.mp_managementserver.service.IAdminArticleService;
-import cn.lichuachua.mp_management.mp_managementserver.service.IAdminService;
-import cn.lichuachua.mp_management.mp_managementserver.service.IArticleService;
-import cn.lichuachua.mp_management.mp_managementserver.service.IArticleTypeService;
+import cn.lichuachua.mp_management.mp_managementserver.service.*;
 import cn.lichuachua.mp_management.mp_managementserver.vo.ArticleListVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -21,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static cn.lichuachua.mp_management.mp_managementserver.util.EmailUtil.send;
 
 /**
  * @author 李歘歘
@@ -35,6 +35,8 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, String> impleme
     private IArticleTypeService articleTypeService;
     @Autowired
     private IAdminService adminService;
+    @Autowired
+    private IUserService userService;
 
 
     /**
@@ -74,6 +76,10 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, String> impleme
         article.setUpdatedAt(new Date());
         article.setRank(articleOptional.get().getRank());
         article.setCreatedAt(articleOptional.get().getCreatedAt());
+        /**
+         * 取出发布者的邮箱
+         */
+        Optional<User> userOptional = userService.selectByKey(articleOptional.get().getPublisherId());
         if (articleOptional.get().getStatus().equals(ArticleStatusEnum.NORMAL.getStatus())){
             article.setStatus(ArticleStatusEnum.DISABLED.getStatus());
             update(article);
@@ -81,11 +87,27 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, String> impleme
              * 写入文章状态日志
              */
             adminArticleService.publish(operationId, adminId,ArticleStatusEnum.DISABLED.getStatus());
+            /**
+             * 发送邮件提醒
+             */
+            try {
+                send(userOptional.get().getUserEmail(),EmailCodeEnum.ARTICLE_STATUS.getMessage(),EmailCodeEnum.ARTICLE_TITLE.getMessage()+articleOptional.get().getTitle()+EmailCodeEnum.ARTICLE_DISABLED.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return 1;
         }else if (articleOptional.get().getStatus().equals(ArticleStatusEnum.DISABLED.getStatus())){
             article.setStatus(ArticleStatusEnum.NORMAL.getStatus());
             update(article);
             adminArticleService.publish(operationId, adminId, ArticleStatusEnum.NORMAL.getStatus());
+            /**
+             * 发送邮件提醒
+             */
+            try {
+                send(userOptional.get().getUserEmail(),EmailCodeEnum.ARTICLE_STATUS.getMessage(),EmailCodeEnum.ARTICLE_TITLE.getMessage()+articleOptional.get().getTitle()+EmailCodeEnum.ARTICLE_NORMAL.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             return 0;
         }else {
             throw new ArticleException(ErrorCodeEnum.ARTICLE_NO_EXIT);
@@ -203,14 +225,27 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article, String> impleme
         if (!articleOptional.isPresent()){
             throw new ArticleException(ErrorCodeEnum.ARTICLE_NO_EXIT);
         }
-
+        /**
+         * 取出发布者的邮箱
+         */
+        Optional<User> userOptional = userService.selectByKey(articleOptional.get().getPublisherId());
         /**
          * 更改文章状态
          */
         if (status.equals(ArticleStatusEnum.NORMAL.getStatus())){
             article.setStatus(ArticleStatusEnum.DISABLED.getStatus());
+            try {
+                send(userOptional.get().getUserEmail(),EmailCodeEnum.ARTICLE_STATUS.getMessage(),EmailCodeEnum.ARTICLE_TITLE.getMessage()+articleOptional.get().getTitle()+EmailCodeEnum.ARTICLE_DISABLED.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }else if (status.equals(ArticleStatusEnum.DISABLED.getStatus())){
             article.setStatus(ArticleStatusEnum.NORMAL.getStatus());
+            try {
+                send(userOptional.get().getUserEmail(),EmailCodeEnum.ARTICLE_STATUS.getMessage(),EmailCodeEnum.ARTICLE_TITLE.getMessage()+articleOptional.get().getTitle()+EmailCodeEnum.ARTICLE_NORMAL.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         article.setAccessory(articleOptional.get().getAccessory());
