@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * @author  李歘歘
  */
-@CrossOrigin(origins = "http://127.0.0.1:8080", maxAge = 3600)
+@CrossOrigin(origins = "http://127.0.0.1:8081", maxAge = 3600)
 @Api(value = "TeamResourceController", tags = {"队伍资源API"})
 @RestController
 @RequestMapping(value = "/teamResource")

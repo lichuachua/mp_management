@@ -23,12 +23,10 @@ import java.util.List;
 /**
  *@author 李歘歘
  */
-@CrossOrigin(origins = "http://127.0.0.1:8080", maxAge = 3600)
+@CrossOrigin(origins = "http://127.0.0.1:8081", maxAge = 3600)
 @Api(value = "AnnouncementController", tags = {"公告日志API"})
 @RestController
-@RequestMapping(value = "/announcement")
-
-
+@RequestMapping(value = "/announcements")
 public class AnnouncementController extends BaseController<AdminInfoDTO> {
 
     @Autowired
@@ -52,8 +50,9 @@ public class AnnouncementController extends BaseController<AdminInfoDTO> {
         validateParams(bindingResult);
 
         /**
-         * 获取当前登录的sdminId
+         * 获取当前登录的adminId
          */
+//        String adminId = "4028b88169ec5ffd0169ec6067330000";
         String adminId = getCurrentUserInfo().getUserId();
         /**
          * 上传文件
@@ -91,6 +90,7 @@ public class AnnouncementController extends BaseController<AdminInfoDTO> {
          * 获取当前登录的用户
          */
         String adminId = getCurrentUserInfo().getUserId();
+//        String adminId = "4028b88169ec5ffd0169ec6067330000";
         announcementService.deleted(announcementId, adminId);
         return ResultWrapper.success();
     }

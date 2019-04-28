@@ -4,6 +4,7 @@ package cn.lichuachua.mp_management.mp_managementserver.web.controller;
 import cn.lichuachua.mp_management.core.support.web.controller.BaseController;
 import cn.lichuachua.mp_management.mp_managementserver.dto.AdminInfoDTO;
 import cn.lichuachua.mp_management.mp_managementserver.enums.AdminStatusEnum;
+import cn.lichuachua.mp_management.mp_managementserver.service.IAnnouncementService;
 import cn.lichuachua.mp_management.mp_managementserver.service.IArticleCommentService;
 import cn.lichuachua.mp_management.mp_managementserver.vo.ArticleCommentListVO;
 import cn.lichuachua.mp_management.mp_managementserver.wrapper.ResultWrapper;
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * @author 李歘歘
  */
-@CrossOrigin(origins = "http://127.0.0.1:8080", maxAge = 3600)
+@CrossOrigin(origins = "http://127.0.0.1:8081", maxAge = 3600)
 @Api(value = "ArticleCommentController", tags = {"评论API"})
 @RestController
 @RequestMapping(value = "/admin/artircle/comment")
@@ -26,6 +27,22 @@ public class ArticleCommentController extends BaseController<AdminInfoDTO> {
 
     @Autowired
     private IArticleCommentService articleCommentService;
+    @Autowired
+    private IAnnouncementService announcementService;
+
+    @ApiOperation("/删除公告")
+    @PutMapping("/deleted/{announcementId}")
+    public ResultWrapper deleted(
+            @PathVariable(value = "announcementId") String announcementId){
+        /**
+         * 获取当前登录的用户
+         */
+        String adminId = getCurrentUserInfo().getUserId();
+//        String adminId = "4028b88169ec5ffd0169ec6067330000";
+        announcementService.deleted(announcementId, adminId);
+        return ResultWrapper.success();
+    }
+
 
 
     /**
@@ -41,7 +58,7 @@ public class ArticleCommentController extends BaseController<AdminInfoDTO> {
          * 获取当前登录的用户Id
          */
         String adminId = getCurrentUserInfo().getUserId();
-
+        System.out.println(adminId);
         Integer status = articleCommentService.updatedStatus(operationId, adminId);
         return ResultWrapper.successWithData(status);
     }

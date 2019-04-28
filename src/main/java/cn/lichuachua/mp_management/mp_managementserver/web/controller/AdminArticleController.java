@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * @author 李歘歘
  */
-@CrossOrigin(origins = "http://127.0.0.1:8080", maxAge = 3600)
+@CrossOrigin(origins = "http://127.0.0.1:8081", maxAge = 3600)
 @Api(value = "AdminArticleController", tags = {"管理文章日志API"})
 @RestController
 @RequestMapping(value = "/admin/article/log")
