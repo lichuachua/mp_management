@@ -63,7 +63,7 @@
             loadData:function(){
                 let self=this;
                 let token=document.querySelector('#token').value;
-                this.$http.get("http://localhost:8081/article/type/queryArticleTypeList", {
+                this.$http.get("http://127.0.0.1:8081/article/type/queryArticleTypeList", {
                     params: {
                         accessToken: token
                     }
@@ -124,7 +124,7 @@
                 let commentForm = new FormData();
                 commentForm.append('accessToken',token);
                 commentForm.append('typeId',typeId);
-                this.$http.delete('http://localhost:8081/article/type/delete/'+typeId,{body:commentForm}, {
+                this.$http.delete('http://127.0.0.1:8081/article/type/delete/'+typeId,{body:commentForm}, {
                     'Content-Type': 'Multipart/form-data'
                 }).then(
                     function(res){

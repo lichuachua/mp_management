@@ -271,7 +271,7 @@ var app=new Vue({
             let appendForm = new FormData();
             let token=document.querySelector('#token').value;
             appendForm.append('accessToken',token);
-            this.$http.put('http://localhost:8081/admin/logout',appendForm,{
+            this.$http.put('http://127.0.0.1:8081/admin/logout',appendForm,{
                 'Content-Type': 'Multipart/form-data'
             }).then(
                 function(res){
